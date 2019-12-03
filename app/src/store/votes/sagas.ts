@@ -1,5 +1,5 @@
-import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
-import {VoteActionTypes, VoteDto, VoteCategory} from './types'
+import { all, call, fork, put, takeEvery } from 'redux-saga/effects'
+import {VoteActionTypes} from './types'
 import {fetchError, submit } from './actions'
 
 import { callApi } from '../../utils/api'

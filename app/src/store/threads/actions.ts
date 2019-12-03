@@ -5,7 +5,7 @@ import {ThreadsActionTypes, Thread, ThreadComment, LikeDto} from './types'
 // This library provides really useful helpers for writing Redux actions in a type-safe manner.
 // For more info: https://github.com/piotrwitek/typesafe-actions
 export const add = (thread: Thread) => action(ThreadsActionTypes.ADD, thread)
-export const addComment = (threadServerId: string, threadComment: ThreadComment ) => action(ThreadsActionTypes.ADD_COMMENT, { threadServerId, threadComment })
+export const addComment = (id: string, clientId: string, threadComment: ThreadComment ) => action(ThreadsActionTypes.ADD_COMMENT, { id, clientId, threadComment })
 
 export const like = (likeDto: LikeDto) => action(ThreadsActionTypes.LIKE, likeDto)
 export const likeSuccess = (likeDto: LikeDto) => action(ThreadsActionTypes.LIKE_SUCCESS, likeDto)

@@ -53,24 +53,24 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
 
     function handleLike(thread: Thread) {
         like({
-            serverId: thread.serverId,
+            serverId: thread.id,
             user: userName
         } as LikeDto)
     }
 
     const Thread = (thread: Thread, index: number) => (
         <Feed.Event key={index}>
-            <Feed.Label onClick={() => history.push(`/thread/${thread.serverId}`)}>
+            <Feed.Label onClick={() => history.push(`/thread/${thread.id}`)}>
                 <img src={thread.author.avatarUrl} />
             </Feed.Label>
             <Feed.Content>
-                <span onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                <span onClick={() => history.push(`/thread/${thread.id}`)}>
                     <Feed.User>
                         {thread.author.name}
                     </Feed.User>
                 </span>
 
-                <Feed.Extra text onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                <Feed.Extra text onClick={() => history.push(`/thread/${thread.id}`)}>
                     {thread.text}
                 </Feed.Extra>
                 <Feed.Meta style={{ width: '500px'}}>
@@ -78,7 +78,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                     <Feed.Like onClick={() => handleLike(thread)}>
                         <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
                     </Feed.Like>
-                    <Feed.Like as='span' onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                    <Feed.Like as='span' onClick={() => history.push(`/thread/${thread.id}`)}>
                         <Icon  name='comment' />{thread.comments.length} Comment{ thread.comments.length == 1 ? '' : 's'}
                     </Feed.Like>
                 </Feed.Meta>

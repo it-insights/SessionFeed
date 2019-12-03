@@ -20,7 +20,7 @@ router.post('/like', function(req, res) {
     return;
   }
 
-  const thread = data.threads.find(t => t.serverId === likeDto.serverId);
+  const thread = data.threads.find(t => t.id === likeDto.id);
 
   if (!thread) {
     res.status(404);
@@ -45,7 +45,7 @@ router.post('/like', function(req, res) {
 router.post('/comment', function(req, res) {
   const commentDto = req.body;
 
-  const thread = data.threads.find(t => t.serverId === commentDto.threadServerId);
+  const thread = data.threads.find(t => t.id === commentDto.id);
 
   if (!thread) {
     res.status(404);
@@ -70,7 +70,7 @@ router.post('/', function(req, res) {
     return;
   }
 
-  thread.serverId = uuid();
+  thread.id = uuid();
 
   data.threads.push(thread);
 

@@ -25,7 +25,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
         }
         case ThreadsActionTypes.ADD_SUCCESS: {
             // Check if message came from server via broadcast (usually the case...)
-            if (action.payload.serverId) {
+            if (action.payload.id) {
                 // Check if message already present / current client already has object in state
                 const threadIndex = state.threads.findIndex(el => el.clientId === action.payload.clientId);
 
@@ -39,7 +39,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
             }
         }
         case ThreadsActionTypes.ADD_COMMENT_SUCCESS: {
-            const threadIndex = state.threads.findIndex(el => el.serverId === action.payload.threadServerId);
+            const threadIndex = state.threads.findIndex(el => el.id === action.payload.threadServerId);
             const thread = state.threads[threadIndex];
 
             if (threadIndex !== -1) {
@@ -54,7 +54,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
             }
         }
         case ThreadsActionTypes.LIKE_SUCCESS: {
-            const threadIndex = state.threads.findIndex(el => el.serverId === action.payload.serverId);
+            const threadIndex = state.threads.findIndex(el => el.id === action.payload.id);
             const thread = state.threads[threadIndex];
 
             if (threadIndex !== -1) {

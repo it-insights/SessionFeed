@@ -6,6 +6,7 @@ import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 import { addComment, like } from "../store/threads/actions";
 import {Feed, Icon, Comment, Form, TextArea, Button, Item, Container, Segment} from "semantic-ui-react";
 import TimeAgo from "react-timeago";
+import {User} from "../store/user/types";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -27,7 +28,7 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, addComment, threads, userName }) => {
     const [ text, setText ] = useState('');
 
-    const thread = threads.find(t => t.serverId === location.pathname.split('/').pop()) as Thread;
+    const thread = threads.find(t => t.id === location.pathname.split('/').pop()) as Thread;
 
     if (!thread)
         return (
@@ -37,7 +38,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
         );
 
     function handleAddComment(text: string) {
-        addComment(thread.serverId, {
+        addComment(thread.id, thread.clientId, {
             timestamp: new Date(),
             author: {
                 name: userName,
@@ -51,7 +52,8 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
 
     function handleLike(thread: Thread) {
         like({
-            serverId: thread.serverId,
+            serverId: thread.id,
+            clientId: thread.clientId,
             user: userName
         } as LikeDto)
     }
