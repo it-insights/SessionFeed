@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SessionFeed
 {
@@ -16,8 +18,7 @@ namespace SessionFeed
         public class Thread
         {
             public string id { get; set; }
-            public string author { get; set; }
-            public string[] likedBy { get; set; }
+            public List<string> likedBy { get; set; }
         }
 
         [FunctionName("Like")]
@@ -34,16 +35,10 @@ namespace SessionFeed
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            Thread data = JsonConvert.DeserializeObject<Thread>(requestBody);
 
-            var threadItem = new Thread
-            {
-                id = data.id,
-                likedBy = data.likedBy.ToObject<string[]>().append(data.author)
-            };
-
-            log.LogInformation($"Inserting Thread:{threadItem.id}");
-            await threadsOut.AddAsync(threadItem);
+            log.LogInformation($"Inserting Thread:{data.id}");
+            await threadsOut.AddAsync(data);
         }
     }
 }
