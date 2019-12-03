@@ -85,16 +85,8 @@ function initWebsocket() {
 
 function initSignalR() {
     return eventChannel(emitter => {
-        connection.on('message', (payload: string) => {
-            console.log('Received message: ' + JSON.stringify(payload));
-
-            let message = {} as any;
-            try {
-                message = JSON.parse(payload);
-            } catch(e) {
-                console.error(`Error parsing : ${e}`)
-                return;
-            }
+        connection.on('message', (message: any) => {
+            console.log('Received message: ' + JSON.stringify(message));
 
             if (message) {
                 const channel = message.channel;
@@ -110,7 +102,7 @@ function initSignalR() {
                     case SocketActionTypes.ADD_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
-                        console.log(`Unknown channel: ${JSON.stringify(payload)}`)
+                        console.log(`Unknown channel: ${JSON.stringify(message)}`)
                 }
             }
         });
@@ -123,7 +115,7 @@ function initSignalR() {
 }
 
 export function* socketSaga() {
-    const channel = yield call(initWebsocket);
+    const channel = yield call(initSignalR);
     while (true) {
         const action = yield take(channel);
         yield put(action)
