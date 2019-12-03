@@ -52,7 +52,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
 
     function handleLike(thread: Thread) {
         like({
-            serverId: thread.id,
+            id: thread.id,
             clientId: thread.clientId,
             user: userName
         } as LikeDto)

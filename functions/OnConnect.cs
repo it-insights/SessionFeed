@@ -44,8 +44,8 @@ namespace SessionFeed
             public DateTime timestamp { get; set; }
             public string author { get; set; }
             public string text { get; set; }
-            public ThreadComment comments { get; set; }
-            public string[] likedBy { get; set; }
+            public List<ThreadComment> comments { get; set; }
+            public List<string> likedBy { get; set; }
     }
 
         [FunctionName("OnConnect")]
@@ -61,9 +61,9 @@ namespace SessionFeed
             Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
             log.LogInformation("Getting db entries");
 
-            IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
-
             List<Thread> threadList = new List<Thread>();
+
+            IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
             while (query.HasMoreResults)
             {

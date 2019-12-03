@@ -53,7 +53,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
 
     function handleLike(thread: Thread) {
         like({
-            serverId: thread.id,
+            id: thread.id,
             user: userName
         } as LikeDto)
     }

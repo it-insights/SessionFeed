@@ -1,11 +1,6 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {User, UserActionTypes} from './types'
 import { fetchError, fetchSuccess, login, loginSuccess } from './actions'
-import { callApi } from '../../utils/api'
-import {act} from "react-dom/test-utils";
-
-
-
 
 function* handleLogin(action: ReturnType<typeof login>) {
     try {

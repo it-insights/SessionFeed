@@ -25,7 +25,7 @@ export interface Thread {
 }
 
 export interface LikeDto {
-    serverId: string,
+    id: string,
     clientId: string,
     user: string
 }
