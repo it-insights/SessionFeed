@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import {RouteComponentProps, Route, Switch, Link} from 'react-router-dom'
 import uuid from 'uuid'
+import { withRouter } from 'react-router'
+
 // @ts-ignore
 import TimeAgo from 'react-timeago'
 
@@ -30,7 +32,7 @@ interface PropsFromDispatch {
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName, loading, threads }) => {
+const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName, history, threads }) => {
     const [ text, setText ] = useState('');
 
     function handleAdd(text: string) {
@@ -58,32 +60,30 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
 
     const Thread = (thread: Thread, index: number) => (
         <Feed.Event key={index}>
-            <Feed.Label>
-                <img style={{ opacity: 0.8 }} src={thread.author.avatarUrl} />
+            <Feed.Label onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                <img src={thread.author.avatarUrl} />
             </Feed.Label>
             <Feed.Content>
-                <Feed.User>
-                    {thread.author.name}
-                </Feed.User>
-                &nbsp;
-                posted a question.
-                &nbsp;
-                <Feed.Extra text>
+                <span onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                    <Feed.User>
+                        {thread.author.name}
+                    </Feed.User>
+                    &nbsp;
+                    posted a question.
+                    &nbsp;
+                </span>
+
+                <Feed.Extra text onClick={() => history.push(`/thread/${thread.serverId}`)}>
                     {thread.text}
                 </Feed.Extra>
                 <Feed.Meta style={{ width: '500px'}}>
-                    <Feed.Date style={{ display: 'inline' }}><TimeAgo date={thread.timestamp} /></Feed.Date>
+                    <Feed.Date><TimeAgo date={thread.timestamp} /></Feed.Date>
                     <Feed.Like onClick={() => handleLike(thread)}>
                         <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
                     </Feed.Like>
-                    <Link to={{
-                        pathname: `/thread/${thread.serverId}`,
-                        state: { threadServerId: thread.serverId }
-                    }}>
-                        <Feed.Like as='span'>
-                            <Icon  name='comment' />{thread.comments.length} Comment{ thread.comments.length == 1 ? '' : 's'}
-                        </Feed.Like>
-                    </Link>
+                    <Feed.Like as='span' onClick={() => history.push(`/thread/${thread.serverId}`)}>
+                        <Icon  name='comment' />{thread.comments.length} Comment{ thread.comments.length == 1 ? '' : 's'}
+                    </Feed.Like>
                 </Feed.Meta>
             </Feed.Content>
         </Feed.Event>
@@ -124,4 +124,4 @@ const mapDispatchToProps = {
 
 // Now let's connect our component!
 // With redux v4's improved typings, we can finally omit generics here.
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadsPage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ThreadsPage))

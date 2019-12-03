@@ -7,3 +7,19 @@ textarea {
   margin-bottom: 5px !important;
 }
 
+.ui.feed > {
+  .event {
+    cursor: pointer;
+    padding: 5px !important;
+
+    img {
+      opacity: 0.8;
+      margin-top: 12px;
+    }
+
+    .date {
+      display: inline !important;
+    }
+  }
+}
+
