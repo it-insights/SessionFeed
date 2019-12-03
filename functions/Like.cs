@@ -16,6 +16,7 @@ namespace SessionFeed
         public class Thread
         {
             public string id { get; set; }
+            public string author { get; set; }
             public string[] likedBy { get; set; }
         }
 
