@@ -56,8 +56,6 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
         } as LikeDto)
     }
 
-
-
     const Thread = (thread: Thread, index: number) => (
         <Feed.Event key={index}>
             <Feed.Label>
@@ -93,10 +91,6 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
 
     return (
         <div>
-            <Header as='h2' icon textAlign='center'>
-                { loading ? <Loader active inline /> : <Icon name='question' circular /> }
-                <Header.Content>Threads</Header.Content>
-            </Header>
             <Feed size='large'>
                 {threads
                     .map((thread, index) => (

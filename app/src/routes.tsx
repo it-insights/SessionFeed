@@ -6,9 +6,11 @@ import ThreadsPage from './pages/threads'
 import ThreadPage from './pages/thread'
 import PrivateRoute from "./components/PrivateRoute";
 import VotingPage from "./pages/voting";
+import Header from "./components/Header";
 
 const Routes: React.FC = () => (
     <div>
+        <Header/>
         <Switch>
             <PrivateRoute exact path="/" component={ThreadsPage} />
             <PrivateRoute path="/thread/:id" component={ThreadPage} />

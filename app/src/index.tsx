@@ -10,10 +10,12 @@ import configureStore from './configureStore'
 import {ApplicationState} from "./store";
 
 import { createBrowserHistory } from 'history';
+import './app.scss';
 
 export const history = createBrowserHistory();
 
 const store = configureStore(history, {} as ApplicationState)
+
 
 ReactDOM.render(<Main store={store} history={history} />, document.getElementById('root'));
 
