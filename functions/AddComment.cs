@@ -51,12 +51,9 @@ namespace SessionFeed
                 PartitionKey = "{clientId}")] Thread thread,
             ILogger log)
         {
-            log.LogInformation($"{comment.tcomment}");
+            log.LogInformation($"Triggered AddComment");
 
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            // thread.comments.Add(comment.comment);
+            thread.comments.Add(comment.tcomment);
 
             log.LogInformation($"Inserting Thread:{thread.id}");
             await threadsOut.AddAsync(thread);
