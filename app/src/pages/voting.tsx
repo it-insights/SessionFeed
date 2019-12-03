@@ -35,10 +35,6 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
         } as VoteCategory)
     }
 
-    function handleComment(text: string) {
-        dispatchComment(text)
-    }
-
     function handleSubmit() {
         submit({
             author: userName,
@@ -76,7 +72,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
 
             <Form reply>
                 <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                <Button type='submit' primary onClick={e => handleComment(text)}>
+                <Button type='submit' primary onClick={e => handleSubmit()}>
                     <Icon  name='edit' />
                     Submit
                 </Button>
