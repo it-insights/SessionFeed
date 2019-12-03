@@ -67,10 +67,19 @@ const threads = [{
     serverId: uuid(),
     timestamp: new Date(),
     likedBy: [ 'Peter' ],
-    author: 'Server',
+    author: {
+        name: 'Server',
+        avatarUrl: 'https://api.adorable.io/avatars/face/eyes2/nose5/mouth7/A170ED'
+    },
     text: 'Initial state from server 1',
     comments: []
 }]
 
+const users = [{
+    name: 'Server',
+    avatarUrl: 'https://api.adorable.io/avatars/face/eyes2/nose5/mouth7/A170ED'
+}]
+
 exports.votes = votes;
 exports.threads = threads;
+exports.users = users;

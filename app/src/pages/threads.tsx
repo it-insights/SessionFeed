@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux'
 import {RouteComponentProps, Route, Switch, Link} from 'react-router-dom'
 import uuid from 'uuid'
+// @ts-ignore
+import TimeAgo from 'react-timeago'
 
 import { ApplicationState } from '../store'
 
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 
-import { add, init, like } from "../store/threads/actions";
+import { add, like } from "../store/threads/actions";
+import {Button, Feed, Form, Header, Icon, TextArea, Image, Loader} from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
     threads: Thread[],
     userName: string,
+    avatarUrl: string,
     loading: boolean,
     errors?: string
     userMessage: string
@@ -21,26 +25,22 @@ interface PropsFromState {
 interface PropsFromDispatch {
     add: typeof add
     like: typeof like
-    init: typeof init
 }
 
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const ThreadsPage: React.FC<AllProps> = ({ match, add, init, like, userMessage, userName, loading, threads }) => {
+const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName, loading, threads }) => {
     const [ text, setText ] = useState('');
-
-    useEffect(() => {
-        if (loading) {
-            init();
-        }
-    });
 
     function handleAdd(text: string) {
         add({
             clientId: uuid(),
             timestamp: new Date(),
-            author: userName,
+            author: {
+                name: userName,
+                avatarUrl: avatarUrl
+            },
             text,
             likedBy: [] as string[],
             comments: [] as ThreadComment[]
@@ -56,31 +56,58 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, init, like, userMessage, 
         } as LikeDto)
     }
 
-    return (
-        <div>
-            <p>Threads{loading ? ' (loading...)' : ''}</p>
 
-            {threads
-                // .filter(thread => player.is_current_team_member === true)
-                .map((thread, index) => (
-                    <Link key={index} to={{
+
+    const Thread = (thread: Thread, index: number) => (
+        <Feed.Event key={index}>
+            <Feed.Label>
+                <img style={{ opacity: 0.8 }} src={thread.author.avatarUrl} />
+            </Feed.Label>
+            <Feed.Content>
+                <Feed.User>
+                    {thread.author.name}
+                </Feed.User>
+                &nbsp;
+                posted a question.
+                &nbsp;
+                <Feed.Extra text>
+                    {thread.text}
+                </Feed.Extra>
+                <Feed.Meta style={{ width: '500px'}}>
+                    <Feed.Date style={{ display: 'inline' }}><TimeAgo date={thread.timestamp} /></Feed.Date>
+                    <Feed.Like onClick={() => handleLike(thread)}>
+                        <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
+                    </Feed.Like>
+                    <Link to={{
                         pathname: `/thread/${thread.serverId}`,
                         state: { threadServerId: thread.serverId }
                     }}>
-                        <hr/>
-                        <p>Likes: {thread.likedBy.length}</p>
-                        <p>{(new Date(thread.timestamp)).toISOString()}</p>
-                        <p>{thread.text}</p>
-                        <p>by {thread.author}</p>
-                        <button onClick={() => handleLike(thread)} disabled={thread.likedBy.indexOf(userName) !== -1}>Like</button>
-                        <hr/>
+                        <Feed.Like as='span'>
+                            <Icon  name='comment' />{thread.comments.length} Comment{ thread.comments.length == 1 ? '' : 's'}
+                        </Feed.Like>
                     </Link>
-                ))
-            }
+                </Feed.Meta>
+            </Feed.Content>
+        </Feed.Event>
+    )
 
-            <p>Ask question</p>
-            <input value={text} onChange={e => setText(e.target.value) } />
-            <button onClick={e => handleAdd(text)} >Send</button>
+    return (
+        <div>
+            <Header as='h2' icon textAlign='center'>
+                { loading ? <Loader active inline /> : <Icon name='question' circular /> }
+                <Header.Content>Threads</Header.Content>
+            </Header>
+            <Feed size='large'>
+                {threads
+                    .map((thread, index) => (
+                        Thread(thread, index)
+                    ))
+                }
+            </Feed>
+            <Form>
+                <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                <Button type='submit'  onClick={e => handleAdd(text)}>Submit</Button>
+            </Form>
         </div>
     )
 }
@@ -90,6 +117,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, init, like, userMessage, 
 // separate them from each other to prevent prop conflicts.
 const mapStateToProps = ({ threads, user }: ApplicationState) => ({
     userName: user.name,
+    avatarUrl: user.avatarUrl,
     threads: threads.threads,
     loading: threads.loading,
     userMessage: threads.userMessage
@@ -97,7 +125,6 @@ const mapStateToProps = ({ threads, user }: ApplicationState) => ({
 
 const mapDispatchToProps = {
     add,
-    init,
     like
 };
 

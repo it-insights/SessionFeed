@@ -5,8 +5,9 @@ import { withRouter } from 'react-router'
 
 import { ApplicationState } from '../store'
 import { User } from '../store/user/types'
-import { login, setName } from "../store/user/actions";
+import { login } from "../store/user/actions";
 import {useState} from "react";
+import getRandomColor from "../utils/randomColor";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -18,21 +19,28 @@ interface PropsFromState {
 
 interface PropsFromDispatch {
     login: typeof login
-    setName: typeof setName
 }
 
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const LoginPage: React.FC<AllProps> = ({ match, name, setName, login, isAuthenticated, history }) => {
+const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history }) => {
+    const [ name, setName ] = useState('');
+
     if (isAuthenticated)
         history.push('/');
+
+    function handleLogin(name: string) {
+        const avatarUrl = `https://api.adorable.io/avatars/face/eyes${Math.floor(Math.random() * 10) + 1}/nose${Math.floor(Math.random() * 10) + 1}/mouth${Math.floor(Math.random() * 10) + 1}/${getRandomColor()}`
+
+        login(name, avatarUrl);
+    }
 
     return (
         <div>
             <p>Login Name</p>
             <input value={name} onChange={e => setName(e.target.value) } />
-            <button onClick={e => login(name)} >Login</button>
+            <button onClick={e => handleLogin(name)} >Login</button>
         </div>
     )
 }
@@ -48,8 +56,7 @@ const mapStateToProps = ({ router, user }: ApplicationState) => ({
 })
 
 const mapDispatchToProps = {
-    login,
-    setName
+    login
 };
 
 // Now let's connect our component!

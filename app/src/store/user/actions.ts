@@ -10,9 +10,8 @@ export const fetchRequest = () => action(UserActionTypes.FETCH_REQUEST)
 // type them properly as well.
 export const fetchSuccess = (data: User) => action(UserActionTypes.FETCH_SUCCESS, data)
 export const fetchError = (message: string) => action(UserActionTypes.FETCH_ERROR, message)
-export const setName = (name: string) => action(UserActionTypes.SET_NAME, name)
-export const login = (name: string) => action(UserActionTypes.LOGIN, name)
-export const loginSuccess = () => action(UserActionTypes.LOGIN_SUCCESS)
+export const login = (name: string, avatarUrl: string) => action(UserActionTypes.LOGIN, { name, avatarUrl })
+export const loginSuccess = (name: string, avatarUrl: string) => action(UserActionTypes.LOGIN_SUCCESS, { name, avatarUrl })
 export const loginExists = (name: string) => action(UserActionTypes.LOGIN_EXISTS, name)
 
 

@@ -1,24 +1,8 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {ThreadsActionTypes, Thread, ThreadComment, LikeDto} from './types'
-import {fetchError, fetchSuccess, add, init, initSuccess, like, userMessage, likeSuccess, addComment} from './actions'
+import {fetchError, fetchSuccess, add, like, userMessage, likeSuccess, addComment} from './actions'
 
 import { callApi } from '../../utils/api'
-
-function* handleInit(action: ReturnType<typeof init>) {
-    try {const res = yield call(callApi, 'get', 'http://localhost:8080', 'threads');
-        if (res.error) {
-            yield put(fetchError(res.error))
-        } else {
-            yield put(initSuccess(res.threads as Thread[]))
-        }
-    } catch (err) {
-        if (err instanceof Error && err.stack) {
-            yield put(fetchError(err.stack))
-        } else {
-            yield put(fetchError('An unknown error occurred.'))
-        }
-    }
-}
 
 function* handleAdd(action: ReturnType<typeof add>) {
     try {
@@ -88,12 +72,8 @@ function* watchLike() {
     yield takeEvery(ThreadsActionTypes.LIKE, handleLike)
 }
 
-function* watchInit() {
-    yield takeEvery(ThreadsActionTypes.INIT, handleInit)
-}
-
 function* threadsSaga() {
-    yield all([fork(watchAdd), fork(watchInit), fork(watchLike), fork(watchAddComment)])
+    yield all([fork(watchAdd), fork(watchLike), fork(watchAddComment)])
 }
 
 export default threadsSaga

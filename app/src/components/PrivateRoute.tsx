@@ -2,7 +2,8 @@ import React, {Component, useEffect} from 'react';
 import {Route, Redirect, RouteComponentProps} from 'react-router-dom';
 import { connect } from "react-redux"
 import { ApplicationState } from "../store";
-import { setName, login } from "../store/user/actions";
+import { login } from "../store/user/actions";
+import getRandomColor from "../utils/randomColor";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -10,7 +11,6 @@ interface PropsFromState {
 }
 
 interface PropsFromDispatch {
-    setName: typeof setName
     login: typeof login
 }
 
@@ -18,13 +18,18 @@ interface PropsFromDispatch {
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch & any
 
 // @ts-ignore
-const PrivateRoute: React.FC<AllProps> = ({ setName, login, isAuthenticated, component: Component, ...params }) => {
+const PrivateRoute: React.FC<AllProps> = ({ login, isAuthenticated, component: Component, ...params }) => {
     const user = localStorage.getItem('user');
+
+    let avatarUrl = localStorage.getItem('avatarUrl');
 
     useEffect(() => {
         if (user && !isAuthenticated) {
-            setName(user);
-            login(user);
+            // For migration purposes...
+            if (!avatarUrl)
+                avatarUrl = `https://api.adorable.io/avatars/face/eyes${Math.floor(Math.random() * 10) + 1}/nose${Math.floor(Math.random() * 10) + 1}/mouth${Math.floor(Math.random() * 10) + 1}/${getRandomColor()}`
+
+            login(user, avatarUrl);
         }
     })
 
@@ -41,7 +46,6 @@ const mapStateToProps = ({ user }: ApplicationState) => ({
 })
 
 const mapDispatchToProps = {
-    setName,
     login
 };
 

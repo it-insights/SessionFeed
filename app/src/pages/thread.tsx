@@ -3,18 +3,18 @@ import { connect } from 'react-redux'
 import {RouteComponentProps, Route, Switch, Link} from 'react-router-dom'
 import { ApplicationState } from '../store'
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
-import { addComment, like, init } from "../store/threads/actions";
+import { addComment, like } from "../store/threads/actions";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
     loading: boolean,
     threads: Thread[],
     userName: string,
+    userAvatarUrl: string,
     errors?: string
 }
 
 interface PropsFromDispatch {
-    init: typeof init,
     addComment: typeof addComment
     like: typeof like
 }
@@ -22,14 +22,8 @@ interface PropsFromDispatch {
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const ThreadPage: React.FC<AllProps> = ({ match, location, init, loading, like, addComment, threads, userName }) => {
+const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, addComment, threads, userName }) => {
     const [ text, setText ] = useState('');
-
-    useEffect(() => {
-        if (loading) {
-            init();
-        }
-    });
 
     const thread = threads.find(t => t.serverId === location.pathname.split('/').pop()) as Thread;
 
@@ -43,7 +37,10 @@ const ThreadPage: React.FC<AllProps> = ({ match, location, init, loading, like, 
     function handleAddComment(text: string) {
         addComment(thread.serverId, {
             timestamp: new Date(),
-            author: userName,
+            author: {
+                name: userName,
+                avatarUrl: userAvatarUrl
+            },
             text
         } as ThreadComment)
 
@@ -62,7 +59,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location, init, loading, like, 
             <p>Likes: {thread.likedBy.length}</p>
             <p>{(new Date(thread.timestamp)).toISOString()}</p>
             <p>{thread.text}</p>
-            <p>by {thread.author}</p>
+            <p>by {thread.author.name}</p>
             <button onClick={() => handleLike(thread)} disabled={thread.likedBy.indexOf(userName) !== -1}>Like</button>
 
             {thread.comments
@@ -72,7 +69,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location, init, loading, like, 
                         <hr/>
                         <p>Comment at {(new Date(comment.timestamp)).toISOString()}</p>
                         <p>{comment.text}</p>
-                        <p>by {comment.author}</p>
+                        <p>by {comment.author.name}</p>
                         <hr/>
                     </div>
                 ))
@@ -91,14 +88,14 @@ const ThreadPage: React.FC<AllProps> = ({ match, location, init, loading, like, 
 const mapStateToProps = ({ router, threads, user }: ApplicationState) => ({
     threads: threads.threads,
     userName: user.name,
+    userAvatarUrl: user.avatarUrl,
     location: router.location,
     loading: threads.loading
 })
 
 const mapDispatchToProps = {
     addComment,
-    like,
-    init
+    like
 };
 
 // Now let's connect our component!

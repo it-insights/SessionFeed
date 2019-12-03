@@ -6,9 +6,11 @@
 // Define however naming conventions you'd like for your action types, but
 // personally, I use the `@@context/ACTION_TYPE` convention, to follow the convention
 // of Redux's `@@INIT` action.
+import {User} from "../user/types";
+
 export interface ThreadComment {
     timestamp: Date,
-    author: string,
+    author: User,
     text: string
 }
 
@@ -16,7 +18,7 @@ export interface Thread {
     clientId: string,
     serverId: string,
     timestamp: Date,
-    author: string,
+    author: User,
     text: string,
     likedBy: string[],
     comments: ThreadComment[]
@@ -35,7 +37,6 @@ export enum ThreadsActionTypes {
     ADD_COMMENT = '@@threads/ADD_COMMENT',
     ADD_COMMENT_SUCCESS = '@@threads/ADD_COMMENT_SUCCESS',
     USER_MESSAGE = '@@threads/USER_MESSAGE',
-    INIT = '@@threads/INIT',
     INIT_SUCCESS = '@@threads/INIT_SUCCESS',
     FETCH_SUCCESS = '@@threads/FETCH_SUCCESS',
     FETCH_ERROR = '@@threads/FETCH_ERROR'

@@ -5,6 +5,7 @@ import {act} from "react-dom/test-utils";
 // Type-safe initialState!
 export const initialState: UserState = {
     name: '',
+    avatarUrl: '',
     isAuthenticated: false,
     errors: undefined,
     loading: false
@@ -18,12 +19,8 @@ const reducer: Reducer<UserState> = (state = initialState, action) => {
         case UserActionTypes.LOGIN: {
             return { ...state, loading: true }
         }
-        case UserActionTypes.SET_NAME: {
-            console.log(action.payload)
-            return { ...state, loading: false, name: action.payload }
-        }
         case UserActionTypes.LOGIN_SUCCESS: {
-            return { ...state, loading: false, isAuthenticated: true }
+            return { ...state, loading: false, name: action.payload.name, avatarUrl: action.payload.avatarUrl, isAuthenticated: true }
         }
         case UserActionTypes.FETCH_SUCCESS: {
             return { ...state, loading: false, name: action.payload }
