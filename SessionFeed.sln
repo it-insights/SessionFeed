@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functions", "functions\SessionFeed.csproj", "{7FB84E9A-5A72-4641-9526-3434DDF79367}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SessionFeed", "functions\SessionFeed.csproj", "{7FB84E9A-5A72-4641-9526-3434DDF79367}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
