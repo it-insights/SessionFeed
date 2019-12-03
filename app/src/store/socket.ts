@@ -7,10 +7,10 @@ import * as signalR from '@microsoft/signalr';
 
 import {VoteActionTypes} from "./votes/types";
 
-// const ws = io.connect('ws://localhost:8080', {
-//     reconnection: true,
-//     transports: ['websocket' ]
-// });
+const ws = io.connect('ws://localhost:8080', {
+    reconnection: true,
+    transports: ['websocket' ]
+});
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl('https://sessionfeed.azurewebsites.net/api')
@@ -26,7 +26,7 @@ connection.start()
     });
 
 
-export enum SocketActionTypes {
+enum SocketActionTypes {
     INIT = '@@socket/INIT',
     ADD_THREAD = '@@socket/ADD_THREAD',
     ADD_COMMENT = '@@socket/ADD_COMMENT',
@@ -34,59 +34,59 @@ export enum SocketActionTypes {
     ADD_VOTE = '@@socket/ADD_VOTE'
 }
 
-// function initWebsocket() {
-//     return eventChannel(emitter => {
-//         ws.on('open', () => {
-//             console.log('opening...');
-//             ws.send(JSON.stringify({ channel: "Debug", payload: "Hello." }))
-//         });
-//
-//         ws.on('error', (error: any) => {
-//             console.log('WebSocket error ' + error);
-//             console.dir(error)
-//         });
-//
-//         ws.on('message', (e: any) => {
-//             console.log('Received message: ' + e);
-//             let message = null;
-//
-//             try {
-//                 message = JSON.parse(e)
-//             } catch(e) {
-//                 console.error(`Error parsing : ${e}`)
-//                 return;
-//             }
-//
-//             if (message) {
-//                 const channel = message.channel;
-//                 switch (channel) {
-//                     case SocketActionTypes.INIT:
-//                         return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
-//                     case SocketActionTypes.ADD_THREAD:
-//                         return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
-//                     case SocketActionTypes.LIKE_THREAD:
-//                         return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
-//                     case SocketActionTypes.ADD_COMMENT:
-//                         return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
-//                     case SocketActionTypes.ADD_VOTE:
-//                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
-//                     default:
-//                         console.log(`Unknown channel: ${JSON.stringify(e)}`)
-//                 }
-//             }
-//         });
-//
-//         // unsubscribe function
-//         return () => {
-//             console.log('Socket off')
-//         }
-//     })
-// }
-
-function initSignalRWebsocket() {
+function initWebsocket() {
     return eventChannel(emitter => {
-        connection.on('message', (user: string, payload: string) => {
-            console.log('Received message: ' + payload);
+        ws.on('open', () => {
+            console.log('opening...');
+            ws.send(JSON.stringify({ channel: "Debug", payload: "Hello." }))
+        });
+
+        ws.on('error', (error: any) => {
+            console.log('WebSocket error ' + error);
+            console.dir(error)
+        });
+
+        ws.on('message', (e: any) => {
+            console.log('Received message: ' + JSON.stringify(e));
+            let message = null;
+
+            try {
+                message = JSON.parse(e)
+            } catch(e) {
+                console.error(`Error parsing : ${e}`)
+                return;
+            }
+
+            if (message) {
+                const channel = message.channel;
+                switch (channel) {
+                    case SocketActionTypes.INIT:
+                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.ADD_THREAD:
+                        return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.LIKE_THREAD:
+                        return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.ADD_COMMENT:
+                        return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.ADD_VOTE:
+                        return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
+                    default:
+                        console.log(`Unknown channel: ${JSON.stringify(e)}`)
+                }
+            }
+        });
+
+        // unsubscribe function
+        return () => {
+            console.log('Socket off')
+        }
+    })
+}
+
+function initSignalR() {
+    return eventChannel(emitter => {
+        connection.on('message', (payload: string) => {
+            console.log('Received message: ' + JSON.stringify(payload));
 
             let message = {} as any;
             try {
@@ -123,7 +123,7 @@ function initSignalRWebsocket() {
 }
 
 export function* socketSaga() {
-    const channel = yield call(initSignalRWebsocket);
+    const channel = yield call(initWebsocket);
     while (true) {
         const action = yield take(channel);
         yield put(action)

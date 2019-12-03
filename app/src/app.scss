@@ -1,0 +1,34 @@
+body {
+  width: 70%;
+  margin: 30px auto;
+}
+
+textarea {
+  margin-bottom: 15px !important;
+}
+
+#login {
+  margin: 0px auto;
+  display: block;
+}
+
+.menu {
+  margin-bottom: 20px !important;
+}
+
+.ui.feed > {
+  .event {
+    cursor: pointer;
+    padding: 5px !important;
+
+    img {
+      opacity: 0.8;
+      margin-top: 12px;
+    }
+
+    .date {
+      display: inline !important;
+    }
+  }
+}
+

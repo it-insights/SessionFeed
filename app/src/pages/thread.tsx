@@ -4,6 +4,9 @@ import {RouteComponentProps, Route, Switch, Link} from 'react-router-dom'
 import { ApplicationState } from '../store'
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 import { addComment, like } from "../store/threads/actions";
+import {Feed, Icon, Comment, Form, TextArea, Button, Item, Container, Segment} from "semantic-ui-react";
+import TimeAgo from "react-timeago";
+import {User} from "../store/user/types";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -25,7 +28,7 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, addComment, threads, userName }) => {
     const [ text, setText ] = useState('');
 
-    const thread = threads.find(t => t.serverId === location.pathname.split('/').pop()) as Thread;
+    const thread = threads.find(t => t.id === location.pathname.split('/').pop()) as Thread;
 
     if (!thread)
         return (
@@ -35,7 +38,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
         );
 
     function handleAddComment(text: string) {
-        addComment(thread.serverId, {
+        addComment(thread.id, thread.clientId, {
             timestamp: new Date(),
             author: {
                 name: userName,
@@ -49,35 +52,68 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
 
     function handleLike(thread: Thread) {
         like({
-            serverId: thread.serverId,
+            serverId: thread.id,
+            clientId: thread.clientId,
             user: userName
         } as LikeDto)
     }
 
+    const CommentElement = (comment: ThreadComment, index: number) => (
+        <Comment key={index}>
+            <Comment.Avatar src={comment.author.avatarUrl} />
+            <Comment.Content>
+                <Comment.Author as='a'>{comment.author.name}</Comment.Author>
+                <Comment.Metadata>
+                    <TimeAgo date={comment.timestamp} />
+                </Comment.Metadata>
+                <Comment.Text>{comment.text}</Comment.Text>
+            </Comment.Content>
+        </Comment>
+    )
+
     return (
         <div>
-            <p>Likes: {thread.likedBy.length}</p>
-            <p>{(new Date(thread.timestamp)).toISOString()}</p>
-            <p>{thread.text}</p>
-            <p>by {thread.author.name}</p>
-            <button onClick={() => handleLike(thread)} disabled={thread.likedBy.indexOf(userName) !== -1}>Like</button>
+            <Segment>
+                <Item.Group>
+                    <Item>
+                        <Item.Image size='tiny' src={thread.author.avatarUrl} />
+                        <Item.Content>
+                            <Item.Header>Question</Item.Header>
+                            <Item.Meta>
+                                By {thread.author.name}
+                            </Item.Meta>
+                            <Item.Description>
+                                {thread.text}
+                            </Item.Description>
+                            <Feed.Extra style={{ width: '500px'}}>
+                                <Feed.Date style={{ display: 'inline' }}><TimeAgo date={thread.timestamp} /></Feed.Date>
+                                <Feed.Like onClick={() => handleLike(thread)}>
+                                    <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
+                                </Feed.Like>
+                            </Feed.Extra>
+                        </Item.Content>
+                    </Item>
+                </Item.Group>
+            </Segment>
 
-            {thread.comments
-                // .filter(thread => player.is_current_team_member === true)
-                .map((comment, index) => (
-                    <div key={index}>
-                        <hr/>
-                        <p>Comment at {(new Date(comment.timestamp)).toISOString()}</p>
-                        <p>{comment.text}</p>
-                        <p>by {comment.author.name}</p>
-                        <hr/>
-                    </div>
-                ))
-            }
+            <Comment.Group>
+                {thread.comments
+                    // .filter(thread => player.is_current_team_member === true)
+                    .map((comment, index) => (
+                        CommentElement(comment, index)
+                    ))
+                }
+            </Comment.Group>
 
-            <p>Post comment</p>
-            <input value={text} onChange={e => setText(e.target.value) } />
-            <button onClick={e => handleAddComment(text)} >Send</button>
+
+
+            <Form reply>
+                <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                <Button type='submit' primary onClick={e => handleAddComment(text)}>
+                    <Icon  name='edit' />
+                    Submit
+                </Button>
+            </Form>
         </div>
     )
 }

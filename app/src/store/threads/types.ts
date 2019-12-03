@@ -16,7 +16,7 @@ export interface ThreadComment {
 
 export interface Thread {
     clientId: string,
-    serverId: string,
+    id: string,
     timestamp: Date,
     author: User,
     text: string,
@@ -26,6 +26,7 @@ export interface Thread {
 
 export interface LikeDto {
     serverId: string,
+    clientId: string,
     user: string
 }
 

@@ -6,7 +6,7 @@ import { callApi } from '../../utils/api'
 
 function* handleAdd(action: ReturnType<typeof add>) {
     try {
-        if (!action.payload.serverId) {
+        if (!action.payload.id) {
             const res = yield call(callApi, 'post', 'http://localhost:8080', 'threads', action.payload);
 
             if (res.error) {

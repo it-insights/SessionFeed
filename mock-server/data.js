@@ -64,7 +64,7 @@ const votes = [{
 
 const threads = [{
     clientId: uuid(),
-    serverId: uuid(),
+    id: uuid(),
     timestamp: new Date(),
     likedBy: [ 'Peter' ],
     author: {

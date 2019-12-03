@@ -6,6 +6,8 @@ import { vote, dispatchComment, submit } from "../store/votes/actions";
  import StarRatingComponent from 'react-star-rating-component';
 import {LikeDto, Thread} from "../store/threads/types";
 import {VoteCategory, VoteDto} from "../store/votes/types";
+import {Feed, Icon, Item, Segment, Rating, Label, Form, TextArea, Button} from "semantic-ui-react";
+import TimeAgo from "react-timeago";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -26,15 +28,11 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch & any
 const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, submit, vote, userName, component: Component, ...params }) => {
     const [ text, setText ] = useState('');
 
-    function handleVote(nextValue: number, prevValue: number, name: string) {
+    function handleVote(rating: number, name: string) {
         vote({
             name,
-            rating: nextValue
+            rating: rating
         } as VoteCategory)
-    }
-
-    function handleComment(text: string) {
-        dispatchComment(text)
     }
 
     function handleSubmit() {
@@ -45,31 +43,44 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
         } as VoteDto)
     }
 
+    const Vote = (category: VoteCategory, index: number) => (
+        <Segment key={index}>
+            <Item.Group>
+                <Item>
+                    <Item.Content>
+                        <Item.Header>{category.name}</Item.Header>
+                        <Item.Description>
+                            <Rating maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
+                        </Item.Description>
+                        <Feed.Extra style={{ width: '500px'}}>
+                            {category.average ?
+                                <div>
+                                    <span>Total votes: {category.count || 'N/A'}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span>Average rating: {category.average || 'N/A'}</span>
+                                </div>
+                             : 'Please submit your vote to view totals and averages.'}
+                        </Feed.Extra>
+                    </Item.Content>
+                </Item>
+            </Item.Group>
+        </Segment>
+    )
+
     return (
         <div>
             {categories
-                // .filter(thread => player.is_current_team_member === true)
                 .map((category: VoteCategory, index: number) => (
-                    <div key={index} >
-                        <hr/>
-                        <p>{category.name} (Total: {category.count}, Avg: {category.average})</p>
-                        <StarRatingComponent
-                            name={category.name}
-                            // editing={false}
-                            starCount={5}
-                            value={category.rating}
-                            onStarClick={handleVote}
-                        />
-                        <hr/>
-                    </div>
+                    Vote(category, index)
                 ))
             }
 
-
-
-            <p>Add comment</p>
-            <input value={text} onChange={e => setText(e.target.value) } onBlur={e => handleComment(text)} />
-            <button onClick={e => handleSubmit()}>Submit</button>
+            <Form reply>
+                <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                <Button type='submit' primary onClick={e => handleSubmit()}>
+                    <Icon  name='edit' />
+                    Submit
+                </Button>
+            </Form>
         </div>
     )
 }
