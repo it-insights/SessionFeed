@@ -47,7 +47,7 @@ function initWebsocket() {
         });
 
         ws.on('message', (e: any) => {
-            console.log('Received message: ' + e);
+            console.log('Received message: ' + JSON.stringify(e));
             let message = null;
 
             try {
@@ -86,7 +86,7 @@ function initWebsocket() {
 function initSignalR() {
     return eventChannel(emitter => {
         connection.on('message', (payload: string) => {
-            console.log('Received message: ' + payload);
+            console.log('Received message: ' + JSON.stringify(payload));
 
             let message = {} as any;
             try {
