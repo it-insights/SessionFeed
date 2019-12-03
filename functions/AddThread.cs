@@ -12,6 +12,7 @@ namespace SessionFeed
 {
     public static class AddThread
     {
+
         public class Thread
         {
             public string clientId { get; set; }

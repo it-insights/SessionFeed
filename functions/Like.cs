@@ -13,22 +13,11 @@ namespace SessionFeed
     public static class Like
     {
 
-        public class ThreadComment
-        {
-            public DateTime timestamp { get; set; }
-            public string author { get; set; }
-            public string text { get; set; }
-        }
-
         public class Thread
         {
-            public string clientId { get; set; }
             public string id { get; set; }
-            public DateTime timestamp { get; set; }
             public string author { get; set; }
-            public string text { get; set; }
             public string[] likedBy { get; set; }
-            public ThreadComment[] comments { get; set; }
         }
 
         [FunctionName("Like")]
@@ -50,11 +39,10 @@ namespace SessionFeed
             var threadItem = new Thread
             {
                 id = data.id,
-                likedBy = data.likedBy.ToObject<string[]>(),
-                comments = data.comments.ToObject<ThreadComment[]>(),
+                likedBy = data.likedBy.ToObject<string[]>().append(data.author)
             };
 
-            log.LogInformation($"Inserting Thread:{threadItem.text}");
+            log.LogInformation($"Inserting Thread:{threadItem.id}");
             await threadsOut.AddAsync(threadItem);
         }
     }
