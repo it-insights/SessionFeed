@@ -7,7 +7,6 @@ import { addComment, like } from "../store/threads/actions";
 import {Feed, Icon, Comment, Form, TextArea, Button, Item, Container, Segment} from "semantic-ui-react";
 import TimeAgo from "react-timeago";
 
-
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
     loading: boolean,

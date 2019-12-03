@@ -8,6 +8,7 @@ import { User } from '../store/user/types'
 import { login } from "../store/user/actions";
 import {useState} from "react";
 import getRandomColor from "../utils/randomColor";
+import {Button, Form, Grid, Segment, Divider, Header} from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -38,9 +39,20 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
 
     return (
         <div>
-            <p>Login Name</p>
-            <input value={name} onChange={e => setName(e.target.value) } />
-            <button onClick={e => handleLogin(name)} >Login</button>
+            <Grid centered columns={3}>
+                <Grid.Column>
+                    <Grid.Row>
+                        <Segment>
+                            <Form>
+                                <Form.Field>
+                                    <input placeholder='What is your name?' value={name} onChange={e => setName(e.target.value) }/>
+                                </Form.Field>
+                                <Button id='login' type='submit' onClick={e => handleLogin(name)}>Join</Button>
+                            </Form>
+                        </Segment>
+                    </Grid.Row>
+                </Grid.Column>
+            </Grid>
         </div>
     )
 }

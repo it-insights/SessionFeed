@@ -68,9 +68,6 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                     <Feed.User>
                         {thread.author.name}
                     </Feed.User>
-                    &nbsp;
-                    posted a question.
-                    &nbsp;
                 </span>
 
                 <Feed.Extra text onClick={() => history.push(`/thread/${thread.serverId}`)}>

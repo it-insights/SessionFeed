@@ -48,7 +48,6 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
     return (
         <div>
             {categories
-                // .filter(thread => player.is_current_team_member === true)
                 .map((category: VoteCategory, index: number) => (
                     <div key={index} >
                         <hr/>
@@ -64,8 +63,6 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                     </div>
                 ))
             }
-
-
 
             <p>Add comment</p>
             <input value={text} onChange={e => setText(e.target.value) } onBlur={e => handleComment(text)} />
