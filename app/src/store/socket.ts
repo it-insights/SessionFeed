@@ -47,6 +47,8 @@ function initWebsocket() {
                         return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
                     case SocketActionTypes.LIKE_THREAD:
                         return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.ADD_COMMENT:
+                        return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
