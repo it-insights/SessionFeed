@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cors = require('cors')
 
 var threadsRouter = require('./routes/threads');
+var votesRouter = require('./routes/votes');
 
 var app = express();
 
@@ -17,5 +18,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/threads', threadsRouter);
+app.use('/vote', votesRouter);
 
 module.exports = app;

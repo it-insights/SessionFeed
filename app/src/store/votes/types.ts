@@ -1,11 +1,15 @@
 export enum VoteActionTypes {
-    VOTE = '@@threads/VOTE',
-    VOTE_SUCCESS = '@@threads/VOTE_SUCCESS'
+    VOTE = '@@votes/VOTE',
+    VOTE_SUCCESS = '@@votes/VOTE_SUCCESS',
+    COMMENT = '@@votes/COMMENT',
+    SUBMIT = '@@votes/SUBMIT',
+    FETCH_SUCCESS = '@@votes/FETCH_SUCCESS',
+    FETCH_ERROR = '@@votes/FETCH_ERROR',
 }
 
-export interface Vote {
+export interface VoteDto {
+    categories: VoteCategory[],
     author: string,
-    rating: number,
     comment: string
 }
 

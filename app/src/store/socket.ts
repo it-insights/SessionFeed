@@ -3,6 +3,7 @@ import { eventChannel, END } from 'redux-saga'
 import {ThreadsActionTypes} from "./threads/types";
 
 import io from 'socket.io-client';
+import {VoteActionTypes} from "./votes/types";
 
 const ws = io.connect('ws://localhost:8080', {
     reconnection: true,
@@ -12,7 +13,8 @@ const ws = io.connect('ws://localhost:8080', {
 export enum SocketActionTypes {
     ADD_THREAD = '@@socket/ADD_THREAD',
     ADD_COMMENT = '@@socket/ADD_COMMENT',
-    LIKE_THREAD = '@@socket/LIKE_THREAD'
+    LIKE_THREAD = '@@socket/LIKE_THREAD',
+    ADD_VOTE = '@@socket/ADD_VOTE'
 }
 
 function initWebsocket() {
@@ -45,8 +47,8 @@ function initWebsocket() {
                         return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
                     case SocketActionTypes.LIKE_THREAD:
                         return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.ADD_COMMENT:
-                        return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.ADD_VOTE:
+                        return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(e)}`)
                 }
