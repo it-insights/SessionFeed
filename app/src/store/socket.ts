@@ -26,7 +26,7 @@ connection.start()
     });
 
 
-export enum SocketActionTypes {
+enum SocketActionTypes {
     INIT = '@@socket/INIT',
     ADD_THREAD = '@@socket/ADD_THREAD',
     ADD_COMMENT = '@@socket/ADD_COMMENT',
