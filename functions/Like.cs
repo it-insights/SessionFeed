@@ -19,6 +19,7 @@ namespace SessionFeed
         {
             public string id { get; set; }
             public List<string> likedBy { get; set; }
+            public string clientId { get; set; }
         }
 
         [FunctionName("Like")]
@@ -32,8 +33,6 @@ namespace SessionFeed
                 IAsyncCollector<Thread> threadsOut,
                 ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             Thread data = JsonConvert.DeserializeObject<Thread>(requestBody);
 

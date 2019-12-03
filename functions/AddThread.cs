@@ -13,13 +13,20 @@ namespace SessionFeed
     public static class AddThread
     {
 
-        public class Thread
+        public class ThreadComment
         {
-            public string clientId { get; set; }
-            public string id { get; set; }
             public DateTime timestamp { get; set; }
             public string author { get; set; }
             public string text { get; set; }
+        }
+
+        public class Thread
+        {
+            public string clientId { get; set; }
+            public DateTime timestamp { get; set; }
+            public string author { get; set; }
+            public string text { get; set; }
+            public ThreadComment comments { get; set; }
         }
 
         [FunctionName("AddThread")]
@@ -41,10 +48,10 @@ namespace SessionFeed
             var threadItem = new Thread
             {
                 clientId = data.clientId,
-                id = data.id,
                 timestamp = data.timestamp,
                 author = data.author,
-                text = data.text
+                text = data.text,
+                comments = new ThreadComment()
             };
 
             log.LogInformation($"Inserting Thread:{threadItem.text}");

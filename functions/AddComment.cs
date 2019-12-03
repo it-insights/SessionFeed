@@ -22,7 +22,12 @@ namespace SessionFeed
         public class Thread
         {
             public string id { get; set; }
-            public ThreadComment[] comments { get; set; }
+            public string clientId { get; set; }
+            public DateTime timestamp { get; set; }
+            public string author { get; set; }
+            public string text { get; set; }
+            public ThreadComment comments { get; set; }
+            public string[] likedBy { get; set; }
         }
 
         [FunctionName("AddComment")]
@@ -34,6 +39,12 @@ namespace SessionFeed
             CreateIfNotExists = true,
             ConnectionStringSetting = "CosmosDBConnection")]
             IAsyncCollector<Thread> threadsOut,
+            [CosmosDB(
+                databaseName: "sessionfeed",
+                collectionName: "signalrtch",
+                ConnectionStringSetting = "CosmosDBConnection",
+                Id = "{id}",
+                PartitionKey = "{clientId}")] Thread thread,
             ILogger log)
         {
             log.LogInformation("AddComment triggered");
@@ -43,6 +54,11 @@ namespace SessionFeed
 
             var threadItem = new Thread
             {
+                author = thread.author,
+                timestamp = thread.timestamp,
+                text = thread.text,
+                likedBy = thread.likedBy,
+                clientId = data.clientId,
                 id = data.id,
                 comments = data.comments.ToObject<ThreadComment[]>()
             };
