@@ -4,7 +4,7 @@ import {fetchError, fetchSuccess, add, like, userMessage, likeSuccess, addCommen
 
 import { callApi } from '../../utils/api'
 
-const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'http://localhost:8080';
+const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
 
 function* handleAdd(action: ReturnType<typeof add>) {
     try {

@@ -58,33 +58,40 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
         } as LikeDto)
     }
 
-    const Thread = (thread: Thread, index: number) => (
-        <Feed.Event key={index}>
-            <Feed.Label onClick={() => history.push(`/thread/${thread.id}`)}>
-                <img src={thread.author.avatarUrl} />
-            </Feed.Label>
-            <Feed.Content>
+    const Thread = (thread: Thread, index: number) => {
+        thread.likedBy = thread.likedBy || [];
+        thread.comments = thread.comments || [];
+
+        return (
+            <Feed.Event key={index}>
+                <Feed.Label onClick={() => history.push(`/thread/${thread.id}`)}>
+                    <img src={thread.author.avatarUrl}/>
+                </Feed.Label>
+                <Feed.Content>
                 <span onClick={() => history.push(`/thread/${thread.id}`)}>
                     <Feed.User>
                         {thread.author.name}
                     </Feed.User>
                 </span>
 
-                <Feed.Extra text onClick={() => history.push(`/thread/${thread.id}`)}>
-                    {thread.text}
-                </Feed.Extra>
-                <Feed.Meta style={{ width: '500px'}}>
-                    <Feed.Date><TimeAgo date={thread.timestamp} /></Feed.Date>
-                    <Feed.Like onClick={() => handleLike(thread)}>
-                        <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
-                    </Feed.Like>
-                    <Feed.Like as='span' onClick={() => history.push(`/thread/${thread.id}`)}>
-                        <Icon  name='comment' />{thread.comments.length} Comment{ thread.comments.length == 1 ? '' : 's'}
-                    </Feed.Like>
-                </Feed.Meta>
-            </Feed.Content>
-        </Feed.Event>
-    )
+                    <Feed.Extra text onClick={() => history.push(`/thread/${thread.id}`)}>
+                        {thread.text}
+                    </Feed.Extra>
+                    <Feed.Meta style={{width: '500px'}}>
+                        <Feed.Date><TimeAgo date={thread.timestamp}/></Feed.Date>
+                        <Feed.Like onClick={() => handleLike(thread)}>
+                            <Icon style={{color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733')}}
+                                  name='like'/>{thread.likedBy.length} Like{thread.likedBy.length == 1 ? '' : 's'}
+                        </Feed.Like>
+                        <Feed.Like as='span' onClick={() => history.push(`/thread/${thread.id}`)}>
+                            <Icon
+                                name='comment'/>{thread.comments.length} Comment{thread.comments.length == 1 ? '' : 's'}
+                        </Feed.Like>
+                    </Feed.Meta>
+                </Feed.Content>
+            </Feed.Event>
+        )
+    }
 
     return (
         <div>

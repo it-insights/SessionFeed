@@ -4,7 +4,7 @@ import {fetchError, submit } from './actions'
 
 import { callApi } from '../../utils/api'
 
-const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'http://localhost:8080';
+const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
 
 function* handleSubmit(action: ReturnType<typeof submit>) {
     try {
