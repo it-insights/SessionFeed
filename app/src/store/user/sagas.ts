@@ -2,6 +2,8 @@ import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {User, UserActionTypes} from './types'
 import { fetchError, fetchSuccess, login, loginSuccess } from './actions'
 
+const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
+
 function* handleLogin(action: ReturnType<typeof login>) {
     try {
         // Check if user exists...

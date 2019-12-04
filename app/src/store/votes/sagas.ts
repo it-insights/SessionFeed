@@ -4,9 +4,11 @@ import {fetchError, submit } from './actions'
 
 import { callApi } from '../../utils/api'
 
+const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
+
 function* handleSubmit(action: ReturnType<typeof submit>) {
     try {
-        const res = yield call(callApi, 'post', 'http://localhost:8080', 'vote', action.payload);
+        const res = yield call(callApi, 'post', endpoint, 'vote', action.payload);
 
         if (res.error) {
             yield put(fetchError(res.error))

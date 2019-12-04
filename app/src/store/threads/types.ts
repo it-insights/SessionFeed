@@ -32,7 +32,7 @@ export interface LikeDto {
 
 export enum ThreadsActionTypes {
     ADD = '@@threads/ADD',
-    ADD_SUCCESS = '@@threads/ADD_SUCCESS',
+    UPDATE = '@@threads/UPDATE',
     LIKE = '@@threads/LIKE',
     LIKE_SUCCESS = '@@threads/LIKE_SUCCESS',
     ADD_COMMENT = '@@threads/ADD_COMMENT',

@@ -5,12 +5,6 @@ var uuid = require('uuid')
 var io = require('../socket')
 var SocketActionTypes = require('../socketactions')
 
-
-router.get('/', function(req, res) {
-  res.status(200);
-  res.json(data);
-})
-
 router.post('/like', function(req, res) {
   const likeDto = req.body;
 
@@ -36,13 +30,13 @@ router.post('/like', function(req, res) {
 
   thread.likedBy.push(likeDto.user);
 
-  io.emit('message', JSON.stringify({ channel: SocketActionTypes.LIKE_THREAD, payload: likeDto }));
+  io.emit('message', JSON.stringify({ channel: SocketActionTypes.LIKE_THREAD, payload: [ thread ] }));
 
   res.status(200);
-  res.json(likeDto);
+  res.type('json').send({});
 });
 
-router.post('/comment', function(req, res) {
+router.post('/addComment', function(req, res) {
   const commentDto = req.body;
 
   const thread = data.threads.find(t => t.id === commentDto.id);
@@ -55,13 +49,13 @@ router.post('/comment', function(req, res) {
 
   thread.comments.push(commentDto.threadComment);
 
-  io.emit('message', JSON.stringify({ channel: SocketActionTypes.ADD_COMMENT, payload: commentDto }));
+  io.emit('message', JSON.stringify({ channel: SocketActionTypes.ADD_COMMENT, payload: [ thread ] }));
 
   res.status(200);
   res.type('json').send({});
 });
 
-router.post('/', function(req, res) {
+router.post('/addThread', function(req, res) {
   const thread = req.body;
 
   if (!thread) {
@@ -74,7 +68,7 @@ router.post('/', function(req, res) {
 
   data.threads.push(thread);
 
-  io.emit('message', JSON.stringify({ channel: SocketActionTypes.ADD_THREAD, payload: thread }));
+  io.emit('message', JSON.stringify({ channel: SocketActionTypes.ADD_THREAD, payload: [ thread ] }));
 
   res.status(200);
   res.type('json').send({});
