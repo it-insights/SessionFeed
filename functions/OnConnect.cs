@@ -1,16 +1,12 @@
 // Default URL for triggering event grid function in the local environment.
 // http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
 using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Microsoft.Azure.Documents.Client;
@@ -46,7 +42,7 @@ namespace SessionFeed
             public string text { get; set; }
             public List<ThreadComment> comments { get; set; }
             public List<string> likedBy { get; set; }
-    }
+        }
 
         [FunctionName("OnConnect")]
         public static async Task Run(

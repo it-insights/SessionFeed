@@ -31,12 +31,12 @@ namespace SessionFeed
         {
             public string clientId { get; set; }
             public string id { get; set; }
-            public ThreadComment tcomment { get; set; }
+            public ThreadComment comment { get; set; }
         }
 
         [FunctionName("AddComment")]
         public static async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] CommentDTO comment,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] CommentDTO commentDTO,
             [CosmosDB(
             databaseName: "sessionfeed",
             collectionName: "signalrtch",
@@ -53,7 +53,12 @@ namespace SessionFeed
         {
             log.LogInformation($"Triggered AddComment");
 
-            thread.comments.Add(comment.tcomment);
+            if (thread == null) 
+            {
+                throw new System.Exception("Invalid clientId, id combination");
+            }
+
+            thread.comments.Add(commentDTO.comment);
 
             log.LogInformation($"Inserting Thread:{thread.id}");
             await threadsOut.AddAsync(thread);
