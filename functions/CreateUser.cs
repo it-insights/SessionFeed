@@ -7,27 +7,51 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SessionFeed
 {
     public static class CreateUser
     {
+        public class User
+        {
+            public string name { get; set; }
+            public string avatarUrl { get; set; }
+        }
+
         [FunctionName("CreateUser")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] User user,
+            [CosmosDB(
+                databaseName: "sessionfeed",
+                collectionName: "signalrtch",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Triggered CreateUser");
 
-            string name = req.Query["name"];
+            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
+            IDocumentQuery<User> query = client.CreateDocumentQuery<User>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.name.Equals(user.name)).AsDocumentQuery();
+            List<User> userList = new List<User>();
+            while (query.HasMoreResults)
+            {
+                foreach (User result in await query.ExecuteNextAsync())
+                {
+                    userList.Add(result);
+                }
+            }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            return name != null
-                ? (ActionResult)new OkObjectResult($"Hello, {name}")
-                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+            if (userList.Count > 0)
+            {
+                return new BadRequestObjectResult("Username already taken");
+            }
+            else
+            {
+                return new OkObjectResult("Ok");
+            }
         }
     }
 }

@@ -14,10 +14,16 @@ namespace SessionFeed
 {
     public static class BroadcastThreads
     {
+        public class User
+        {
+            public string name { get; set; }
+            public string avatarUrl { get; set; }
+        }
+
         public class ThreadComment
         {
             public DateTime timestamp { get; set; }
-            public string author { get; set; }
+            public User author { get; set; }
             public string text { get; set; }
         }
 
@@ -26,7 +32,7 @@ namespace SessionFeed
             public string clientId { get; set; }
             public string id { get; set; }
             public DateTime timestamp { get; set; }
-            public string author { get; set; }
+            public User author { get; set; }
             public string text { get; set; }
             public List<ThreadComment> comments { get; set; }
             public List<string> likedBy { get; set; }
@@ -70,7 +76,7 @@ namespace SessionFeed
                 new SignalRMessage
                 {
                     Target = "message",
-                    Arguments = new[] { new { channel = "@@socket/INIT", payload = threadList } }
+                    Arguments = new[] { new { channel = "@@socket/UPDATE_THREAD", payload = threadList } }
                 });
         }
     }
