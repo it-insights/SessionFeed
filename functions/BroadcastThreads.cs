@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -54,30 +53,38 @@ namespace SessionFeed
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
-            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
-            log.LogInformation("Getting db entries");
-
-            List<Thread> threadList = new List<Thread>();
-
-            foreach (var document in documents)
+            try
             {
-                IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
+                log.LogInformation("Getting db entries");
 
-                while (query.HasMoreResults)
+                List<Thread> threadList = new List<Thread>();
+
+                foreach (var document in documents)
                 {
-                    foreach (Thread result in await query.ExecuteNextAsync())
+                    IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
+
+                    while (query.HasMoreResults)
                     {
-                        threadList.Add(result);
+                        foreach (Thread result in await query.ExecuteNextAsync())
+                        {
+                            threadList.Add(result);
+                        }
                     }
                 }
-            }
 
-            await signalRMessages.AddAsync(
-                new SignalRMessage
-                {
-                    Target = "message",
-                    Arguments = new[] { new { channel = "@@socket/UPDATE_THREAD", payload = threadList } }
-                });
+                await signalRMessages.AddAsync(
+                    new SignalRMessage
+                    {
+                        Target = "message",
+                        Arguments = new[] { new { channel = "@@socket/UPDATE_THREAD", payload = threadList } }
+                    });
+            }
+            catch (Exception e)
+            {
+                log.LogError(e.ToString());
+                throw;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
+using System.Linq;
 
 namespace SessionFeed
 {
@@ -82,7 +83,7 @@ namespace SessionFeed
                 {
                     UserId = eventMessage.UserId,
                     Target = "message",
-                    Arguments = new[] { new { channel = "@@socket/INIT", payload = threadList } }
+                    Arguments = new[] { new { channel = "@@socket/INIT", payload = threadList.OrderByDescending(o => o.likedBy != null ? o.likedBy.Count : float.MinValue).ToList() } }
                 });
         }
     }
