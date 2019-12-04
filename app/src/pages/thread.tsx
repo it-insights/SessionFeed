@@ -37,6 +37,9 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
             </div>
         );
 
+    thread.likedBy = thread.likedBy || [];
+    thread.comments = thread.comments || [];
+
     function handleAddComment(text: string) {
         addComment(thread.id, thread.clientId, {
             timestamp: new Date(),
@@ -54,7 +57,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
         like({
             id: thread.id,
             clientId: thread.clientId,
-            user: userName
+            author: userName
         } as LikeDto)
     }
 

@@ -19,26 +19,61 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
         case ThreadsActionTypes.ADD: {
             return { ...state, isVerifying: true, threads: [ ...state.threads, action.payload ] }
         }
-        case ThreadsActionTypes.LIKE:
         case ThreadsActionTypes.ADD_COMMENT: {
-            return { ...state, isVerifying: true }
-        }
-        case ThreadsActionTypes.UPDATE: {
-            for (const thread in action.payload) {
-                // Check if message already present / current client already has object in state
-                const threadIndex = state.threads.findIndex(el => el.clientId === action.payload.clientId);
+            const index = state.threads.findIndex(el => el.id === action.payload.id);
+            const thread = state.threads[index];
 
-                // Replace to add missing metadata
-                if (threadIndex !== -1) {
-                    return {
-                        ...state,
-                        threads: [...state.threads.slice(0, threadIndex), action.payload, ...state.threads.slice(threadIndex + 1)]
-                    }
-                // Just add as it is an update from the server
-                } else {
-                    return {...state, threads: [...state.threads, action.payload]}
+            if (index !== -1) {
+                return {
+                    ...state,
+                    isVerifying: true,
+                    threads: [
+                        ...state.threads.slice(0, index),
+                        { ...thread, comments: [ ...thread.comments, action.payload.comment ] },
+                        ...state.threads.slice(index + 1)
+                    ]
                 }
             }
+        }
+        case ThreadsActionTypes.LIKE: {
+            const index = state.threads.findIndex(el => el.id === action.payload.id);
+            const thread = state.threads[index];
+
+            if (thread.likedBy.indexOf(action.payload.author) !== -1) {
+                return state;
+            }
+
+            if (index !== -1) {
+                return {
+                    ...state,
+                    isVerifying: true,
+                    threads: [
+                        ...state.threads.slice(0, index),
+                        { ...thread, likedBy: [ ...thread.likedBy, action.payload.author ] },
+                        ...state.threads.slice(index + 1)
+                    ]
+                }
+            }
+
+            return state;
+        }
+        case ThreadsActionTypes.UPDATE: {
+            let threads = [ ...state.threads ] as Thread[]
+
+            for (const thread of action.payload as Thread[]) {
+                // Check if message already present / current client already has object in state
+                const index = threads.findIndex(el => el.clientId === thread.clientId);
+
+                // Replace to add missing metadata
+                if (index !== -1) {
+                    threads = [...threads.slice(0, index), thread, ...threads.slice(index + 1)]
+                // Just add as it is an update from the server
+                } else {
+                    threads = [...threads, thread]
+                }
+            }
+
+            return { ...state, threads };
         }
         case ThreadsActionTypes.INIT_SUCCESS: {
             return { ...state, loading: false, threads: action.payload }

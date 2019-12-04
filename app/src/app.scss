@@ -24,6 +24,14 @@ textarea {
     img {
       opacity: 0.8;
       margin-top: 12px;
+      display: inline;
+    }
+
+    .loader {
+      margin-top: 12px;
+      display: inline;
+      left: -20px;
+      top: -21px;
     }
 
     .date {

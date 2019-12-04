@@ -27,7 +27,7 @@ export interface Thread {
 export interface LikeDto {
     id: string,
     clientId: string,
-    user: string
+    author: string
 }
 
 export enum ThreadsActionTypes {
