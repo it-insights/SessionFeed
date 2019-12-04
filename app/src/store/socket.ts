@@ -7,24 +7,31 @@ import * as signalR from '@microsoft/signalr';
 
 import {VoteActionTypes} from "./votes/types";
 
-const ws = io.connect('ws://localhost:8080', {
-    reconnection: true,
-    transports: ['websocket' ]
-});
+const endpoint: string = process.env.REACT_APP_SOCKET_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
+const mockEndpoint: string = process.env.REACT_APP_MOCK_SOCKET_ENDPOINT || 'http://localhost:8080';
+const useMockSocket: boolean = process.env.REACT_APP_USE_MOCK_SOCKET === 'true'
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl('https://sessionfeed.azurewebsites.net/api')
-    .configureLogging(signalR.LogLevel.Critical)
-    .build();
+let ws :any
 
-connection.start()
-    .then(function () {
-        console.log("connected");
-    })
-    .catch(function (err) {
-        return console.error("SignalR error: " + err.toString());
+if (useMockSocket) {
+    ws = io.connect(mockEndpoint, {
+        reconnection: true,
+        transports: ['websocket' ]
     });
+} else {
+    ws = new signalR.HubConnectionBuilder()
+        .withUrl(endpoint)
+        .configureLogging(signalR.LogLevel.Critical)
+        .build();
 
+    ws.start()
+        .then(function () {
+            console.log("connected");
+        })
+        .catch(function (err :any) {
+            return console.error("SignalR error: " + err.toString());
+        });
+}
 
 enum SocketActionTypes {
     INIT = '@@socket/INIT',
@@ -47,6 +54,8 @@ function initWebsocket() {
         });
 
         ws.on('message', (e: any) => {
+            var x = process.env;
+
             console.log('Received message: ' + JSON.stringify(e));
             let message = null;
 
@@ -85,7 +94,7 @@ function initWebsocket() {
 
 function initSignalR() {
     return eventChannel(emitter => {
-        connection.on('message', (message: any) => {
+        ws.on('message', (message: any) => {
             console.log('Received message: ' + JSON.stringify(message));
 
             if (message) {
@@ -115,7 +124,7 @@ function initSignalR() {
 }
 
 export function* socketSaga() {
-    const channel = yield call(initSignalR);
+    const channel = yield call(useMockSocket ? initWebsocket : initSignalR);
     while (true) {
         const action = yield take(channel);
         yield put(action)

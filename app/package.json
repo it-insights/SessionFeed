@@ -7,7 +7,6 @@
     "@microsoft/signalr": "^3.0.1",
     "@types/history": "^4.7.3",
     "@types/jest": "24.0.23",
-    "@types/node": "12.12.14",
     "@types/react": "16.9.13",
     "@types/react-dom": "16.9.4",
     "connected-react-router": "latest",
@@ -32,6 +31,7 @@
   },
   "scripts": {
     "start": "cross-env PORT=44363 react-scripts start",
+    "prod": "cross-env PORT=44363 REACT_APP_REST_ENDPOINT=https://sessionfeed.azurewebsites.net/api REACT_APP_USE_MOCK_SOCKET=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -52,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^12.12.14",
     "@types/node-sass": "^4.11.0",
     "@types/react-redux": "^7.1.5",
     "@types/react-router-dom": "^5.1.3",

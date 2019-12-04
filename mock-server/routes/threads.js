@@ -5,12 +5,6 @@ var uuid = require('uuid')
 var io = require('../socket')
 var SocketActionTypes = require('../socketactions')
 
-
-router.get('/', function(req, res) {
-  res.status(200);
-  res.json(data);
-})
-
 router.post('/like', function(req, res) {
   const likeDto = req.body;
 
@@ -42,7 +36,7 @@ router.post('/like', function(req, res) {
   res.json(likeDto);
 });
 
-router.post('/comment', function(req, res) {
+router.post('/addComment', function(req, res) {
   const commentDto = req.body;
 
   const thread = data.threads.find(t => t.id === commentDto.id);
@@ -61,7 +55,7 @@ router.post('/comment', function(req, res) {
   res.type('json').send({});
 });
 
-router.post('/', function(req, res) {
+router.post('/addThread', function(req, res) {
   const thread = req.body;
 
   if (!thread) {

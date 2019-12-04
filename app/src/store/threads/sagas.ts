@@ -4,10 +4,12 @@ import {fetchError, fetchSuccess, add, like, userMessage, likeSuccess, addCommen
 
 import { callApi } from '../../utils/api'
 
+const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'http://localhost:8080';
+
 function* handleAdd(action: ReturnType<typeof add>) {
     try {
         if (!action.payload.id) {
-            const res = yield call(callApi, 'post', 'http://localhost:8080', 'threads', action.payload);
+            const res = yield call(callApi, 'post', endpoint, 'addThread', action.payload);
 
             if (res.error) {
                 yield put(fetchError(res.error))
@@ -24,7 +26,7 @@ function* handleAdd(action: ReturnType<typeof add>) {
 
 function* handleAddComment(action: ReturnType<typeof addComment>) {
     try {
-        const res = yield call(callApi, 'post', 'http://localhost:8080', 'threads/comment', action.payload);
+        const res = yield call(callApi, 'post', endpoint, 'addComment', action.payload);
 
         if (res.error) {
             yield put(fetchError(res.error))
@@ -40,7 +42,7 @@ function* handleAddComment(action: ReturnType<typeof addComment>) {
 
 function* handleLike(action: ReturnType<typeof like>) {
     try {
-        const res = yield call(callApi, 'post', 'http://localhost:8080', 'threads/like', action.payload);
+        const res = yield call(callApi, 'post', endpoint, 'like', action.payload);
 
         if (res.error) {
             if (res.status === 409) {
