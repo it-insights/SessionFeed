@@ -35,9 +35,7 @@ if (useMockSocket) {
 
 enum SocketActionTypes {
     INIT = '@@socket/INIT',
-    ADD_THREAD = '@@socket/ADD_THREAD',
-    ADD_COMMENT = '@@socket/ADD_COMMENT',
-    LIKE_THREAD = '@@socket/LIKE_THREAD',
+    UPDATE_THREAD = '@@socket/UPDATE_THREAD',
     ADD_VOTE = '@@socket/ADD_VOTE'
 }
 
@@ -71,12 +69,8 @@ function initWebsocket() {
                 switch (channel) {
                     case SocketActionTypes.INIT:
                         return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.ADD_THREAD:
-                        return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.LIKE_THREAD:
-                        return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.ADD_COMMENT:
-                        return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.UPDATE_THREAD:
+                        return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
@@ -102,12 +96,8 @@ function initSignalR() {
                 switch (channel) {
                     case SocketActionTypes.INIT:
                         return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.ADD_THREAD:
-                        return emitter({ type: ThreadsActionTypes.ADD_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.LIKE_THREAD:
-                        return emitter({ type: ThreadsActionTypes.LIKE_SUCCESS, payload: message.payload });
-                    case SocketActionTypes.ADD_COMMENT:
-                        return emitter({ type: ThreadsActionTypes.ADD_COMMENT_SUCCESS, payload: message.payload });
+                    case SocketActionTypes.UPDATE_THREAD:
+                        return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
