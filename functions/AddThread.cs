@@ -54,7 +54,7 @@ namespace SessionFeed
                 comments = new ThreadComment()
             };
 
-            log.LogInformation($"Inserting Thread:{threadItem.text}");
+            log.LogInformation($"Inserting ThreadAuthor:{threadItem.author}; ThreadText:{threadItem.text}");
             await threadsOut.AddAsync(threadItem);
         }
     }

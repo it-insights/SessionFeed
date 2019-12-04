@@ -1,12 +1,9 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SessionFeed
 {
@@ -26,13 +23,20 @@ namespace SessionFeed
             public DateTime timestamp { get; set; }
             public string author { get; set; }
             public string text { get; set; }
-            public ThreadComment comments { get; set; }
-            public string[] likedBy { get; set; }
+            public List<ThreadComment> comments { get; set; }
+            public List<string> likedBy { get; set; }
+        }
+
+        public class CommentDTO
+        {
+            public string clientId { get; set; }
+            public string id { get; set; }
+            public ThreadComment comment { get; set; }
         }
 
         [FunctionName("AddComment")]
         public static async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] CommentDTO commentDTO,
             [CosmosDB(
             databaseName: "sessionfeed",
             collectionName: "signalrtch",
@@ -47,24 +51,17 @@ namespace SessionFeed
                 PartitionKey = "{clientId}")] Thread thread,
             ILogger log)
         {
-            log.LogInformation("AddComment triggered");
+            log.LogInformation($"Triggered AddComment");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            var threadItem = new Thread
+            if (thread == null) 
             {
-                author = thread.author,
-                timestamp = thread.timestamp,
-                text = thread.text,
-                likedBy = thread.likedBy,
-                clientId = data.clientId,
-                id = data.id,
-                comments = data.comments.ToObject<ThreadComment[]>()
-            };
+                throw new System.Exception("Invalid clientId, id combination");
+            }
 
-            log.LogInformation($"Inserting Thread:{threadItem.id}");
-            await threadsOut.AddAsync(threadItem);
+            thread.comments.Add(commentDTO.comment);
+
+            log.LogInformation($"Inserting Thread:{thread.id}");
+            await threadsOut.AddAsync(thread);
         }
     }
 }
