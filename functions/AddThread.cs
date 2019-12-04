@@ -35,7 +35,7 @@ namespace SessionFeed
 
         [FunctionName("AddThread")]
         public static async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] Thread threadItem,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] Thread threadItem,
             [CosmosDB(
             databaseName: "sessionfeed",
             collectionName: "signalrtch",

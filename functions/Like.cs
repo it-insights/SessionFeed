@@ -47,7 +47,7 @@ namespace SessionFeed
 
         [FunctionName("Like")]
         public static async Task Run(
-                [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] LikeDTO likeDTO,
+                [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] LikeDTO likeDTO,
                 [CosmosDB(
                 databaseName: "sessionfeed",
                 collectionName: "signalrtch",

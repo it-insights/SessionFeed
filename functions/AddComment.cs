@@ -42,7 +42,7 @@ namespace SessionFeed
 
         [FunctionName("AddComment")]
         public static async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] CommentDTO commentDTO,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] CommentDTO commentDTO,
             [CosmosDB(
             databaseName: "sessionfeed",
             collectionName: "signalrtch",
