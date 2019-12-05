@@ -51,40 +51,93 @@ namespace SessionFeed
             public List<string> likedBy { get; set; }
         }
 
+        public class VoteCategory
+        {
+            public string name { get; set; }
+            public int rating { get; set; }
+            public int count { get; set; }
+            public float average { get; set; }
+        }
+
+        public class VoteDTO
+        {
+            public List<VoteCategory> categories { get; set; }
+        }
+
         [FunctionName("OnConnect")]
         public static async Task Run(
             [EventGridTrigger]EventGridEvent eventGridEvent,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
+                collectionName: "signalrtchthreads",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
+            [CosmosDB(
+                databaseName: "sessionfeed",
+                collectionName: "signalrtchvotes",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient voteClient,
             ILogger log)
         {
-            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
-            log.LogInformation("Getting db entries");
-
-            List<Thread> threadList = new List<Thread>();
-
-            IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
-
-            while (query.HasMoreResults)
+            try
             {
-                foreach (Thread result in await query.ExecuteNextAsync())
+                // Get threads
+
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
+                                List<Thread> threadList = new List<Thread>();
+
+                log.LogInformation("Getting threads");
+                IDocumentQuery<Thread> query = threadClient.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+
+                while (query.HasMoreResults)
                 {
-                    threadList.Add(result);
+                    foreach (Thread result in await query.ExecuteNextAsync())
+                    {
+                        threadList.Add(result);
+                    }
                 }
-            }
 
-            var eventMessage = ((JObject)eventGridEvent.Data).ToObject<SignalREvent>();
+                // Get votes
 
-            await signalRMessages.AddAsync(
-                new SignalRMessage
+                Uri votesUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchvotes");
+                List<VoteCategory> voteList = new List<VoteCategory>();
+                List<VoteCategory> voteAverages = new List<VoteCategory>();
+
+                log.LogInformation("Getting votes");
+                IDocumentQuery<VoteDTO> voteQuery = voteClient.CreateDocumentQuery<VoteDTO>(votesUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+
+                while (voteQuery.HasMoreResults)
                 {
-                    UserId = eventMessage.UserId,
-                    Target = "message",
-                    Arguments = new[] { new { channel = "@@socket/INIT", payload = threadList.OrderByDescending(o => o.likedBy != null ? o.likedBy.Count : float.MinValue).ToList() } }
-                });
+                    foreach (VoteDTO result in await voteQuery.ExecuteNextAsync().ConfigureAwait(false))
+                    {
+                        if (result != null && result.categories != null)
+                        {
+                            voteList.AddRange(result.categories);
+                        }
+                    }
+                }
+
+                foreach (VoteCategory voteCategory in voteList.GroupBy(x => x.name).Select(x => x.FirstOrDefault()))
+                {
+
+                    voteAverages.Add(new VoteCategory { name = voteCategory.name, count = voteList.Where(p => p.name.Equals(voteCategory.name)).Count(), average = Convert.ToSingle(voteList.Where(p => p.name.Equals(voteCategory.name)).Average(p => p.rating)) });
+                    log.LogInformation("Category Name: {0}; Vote count:{1}; Vote average:{2}\t", voteAverages.Last().name, voteAverages.Last().count, voteAverages.Last().average);
+                }
+
+                var eventMessage = ((JObject)eventGridEvent.Data).ToObject<SignalREvent>();
+
+                await signalRMessages.AddAsync(
+                    new SignalRMessage
+                    {
+                        UserId = eventMessage.UserId,
+                        Target = "message",
+                        Arguments = new[] { new { channel = "@@socket/INIT", payload = new List<dynamic> { threadList.OrderByDescending(o => o.likedBy != null ? o.likedBy.Count : float.MinValue).ToList(), voteAverages } } }
+                    }).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                log.LogError(e.ToString());
+                throw;
+            }
         }
     }
 }

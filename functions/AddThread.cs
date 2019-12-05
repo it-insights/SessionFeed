@@ -38,7 +38,7 @@ namespace SessionFeed
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] Thread threadItem,
             [CosmosDB(
             databaseName: "sessionfeed",
-            collectionName: "signalrtch",
+            collectionName: "signalrtchthreads",
             CreateIfNotExists = true,
             ConnectionStringSetting = "CosmosDBConnection")]
             IAsyncCollector<Thread> threadsOut,
