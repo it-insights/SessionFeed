@@ -17,6 +17,9 @@ export const initialState: VotesState = {
 // everything will remain type-safe.
 const reducer: Reducer<VotesState> = (state = initialState, action) => {
     switch (action.type) {
+        case VoteActionTypes.INIT_SUCCESS: {
+            return { ...state, categories: action.payload }
+        }
         case VoteActionTypes.VOTE: {
             const categoryIndex = state.categories.findIndex(el => el.name === action.payload.name);
             const category = state.categories[categoryIndex];

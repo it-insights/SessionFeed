@@ -68,7 +68,8 @@ function initWebsocket() {
                 const channel = message.channel;
                 switch (channel) {
                     case SocketActionTypes.INIT:
-                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
+                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload.threads });
+                        return emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload.votes });
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
