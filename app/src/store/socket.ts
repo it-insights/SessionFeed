@@ -68,8 +68,9 @@ function initWebsocket() {
                 const channel = message.channel;
                 switch (channel) {
                     case SocketActionTypes.INIT:
-                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload.threads });
-                        return emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload.votes });
+                        emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
+                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
@@ -96,7 +97,9 @@ function initSignalR() {
                 const channel = message.channel;
                 switch (channel) {
                     case SocketActionTypes.INIT:
-                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
+                        emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
+                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.ADD_VOTE:
