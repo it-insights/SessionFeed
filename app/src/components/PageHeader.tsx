@@ -19,29 +19,32 @@ const PageHeader: React.FC<AllProps> = ({ history }) => {
 
     return (
         <div>
-            <Divider horizontal>
-                <Header size='medium'>
+            <Divider id='header' horizontal>
+                <Header size='large'>
                     Session Feed
                 </Header>
             </Divider>
-            <Menu pointing secondary>
-                <Menu.Item
-                    name='Threads'
-                    active={activeItem === 'Threads'}
-                    onClick={() => {
-                        setActiveItem('Threads');
-                        history.push('/')
-                    }}
-                />
-                <Menu.Item
-                    name='Vote'
-                    active={activeItem === 'Vote'}
-                    onClick={() => {
-                        setActiveItem('Vote');
-                        history.push('/vote')
-                    }}
-                />
-            </Menu>
+            { !history.location.pathname.includes('login') ? (
+                <Menu pointing secondary>
+                    <Menu.Item
+                        name='Threads'
+                        active={activeItem === 'Threads'}
+                        onClick={() => {
+                            setActiveItem('Threads');
+                            history.push('/')
+                        }}
+                    />
+                    <Menu.Item
+                        name='Vote'
+                        active={activeItem === 'Vote'}
+                        onClick={() => {
+                            setActiveItem('Vote');
+                            history.push('/vote')
+                        }}
+                    />
+                </Menu>
+                ) : ''
+            }
         </div>
     )
 }

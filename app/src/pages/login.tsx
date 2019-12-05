@@ -8,7 +8,7 @@ import { User } from '../store/user/types'
 import { login } from "../store/user/actions";
 import {useState} from "react";
 import getRandomColor from "../utils/randomColor";
-import {Button, Form, Grid, Segment, Divider, Header} from "semantic-ui-react";
+import {Button, Form, Grid, Segment, Divider, Header, Input, Label, Message} from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -27,11 +27,22 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
 const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history }) => {
     const [ name, setName ] = useState('');
+    const [ errorMessage, setError ] = useState('');
 
     if (isAuthenticated)
         history.push('/');
 
+    function handleInput(name: string) {
+        setError('');
+        setName(name)
+    }
+
     function handleLogin(name: string) {
+        if (name === '') {
+            setError('Name cannot be empty.')
+            return;
+        }
+
         const avatarUrl = `https://api.adorable.io/avatars/face/eyes${Math.floor(Math.random() * 10) + 1}/nose${Math.floor(Math.random() * 10) + 1}/mouth${Math.floor(Math.random() * 10) + 1}/${getRandomColor()}`
 
         login(name, avatarUrl);
@@ -45,9 +56,11 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
                         <Segment>
                             <Form>
                                 <Form.Field>
-                                    <input placeholder='What is your name?' value={name} onChange={e => setName(e.target.value) }/>
+                                    <Header as='h3' textAlign='center'>Join Feed</Header>
+                                    <Input error={!!errorMessage} placeholder='What is your name?' value={name} onChange={e => handleInput(e.target.value) }/>
+                                    {errorMessage ? <Message size='small' negative>{errorMessage}</Message> : ''}
                                 </Form.Field>
-                                <Button id='login' type='submit' onClick={e => handleLogin(name)}>Join</Button>
+                                <Button id='login' type='submit'  onClick={e => handleLogin(name)}>Submit</Button>
                             </Form>
                         </Segment>
                     </Grid.Row>

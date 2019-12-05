@@ -10,6 +10,7 @@ export enum VoteActionTypes {
 export interface VoteDto {
     categories: VoteCategory[],
     author: string,
+    email: string,
     comment: string
 }
 
