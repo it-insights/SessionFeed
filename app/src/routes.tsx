@@ -7,6 +7,7 @@ import ThreadPage from './pages/thread'
 import PrivateRoute from "./components/PrivateRoute";
 import VotingPage from "./pages/voting";
 import PageHeader from "./components/PageHeader";
+import Imprint from "./pages/imprint";
 
 const Routes: React.FC = () => (
     <div>
@@ -16,6 +17,7 @@ const Routes: React.FC = () => (
             <PrivateRoute path="/thread/:id" component={ThreadPage} />
             <PrivateRoute path="/vote" component={VotingPage} />
             <Route path="/login" component={LoginPage} />
+            <Route path="/imprint" component={Imprint} />
             <Route component={() => <div>Not Found</div>} />
         </Switch>
     </div>

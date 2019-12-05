@@ -6,7 +6,7 @@ import { vote, dispatchComment, submit } from "../store/votes/actions";
  import StarRatingComponent from 'react-star-rating-component';
 import {LikeDto, Thread} from "../store/threads/types";
 import {VoteCategory, VoteDto} from "../store/votes/types";
-import {Feed, Icon, Item, Segment, Rating, Label, Form, TextArea, Button} from "semantic-ui-react";
+import {Feed, Icon, Item, Segment, Rating, Label, Form, TextArea, Button, Input, Popup} from "semantic-ui-react";
 import TimeAgo from "react-timeago";
 
 // Separate state props + dispatch props to their own interfaces.
@@ -27,6 +27,7 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch & any
 // @ts-ignore
 const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, submit, vote, userName, component: Component, ...params }) => {
     const [ text, setText ] = useState('');
+    const [ email, setEmail ] = useState('');
 
     function handleVote(rating: number, name: string) {
         vote({
@@ -39,6 +40,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
         submit({
             author: userName,
             comment: text,
+            email: email,
             categories
         } as VoteDto)
     }
@@ -76,8 +78,23 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
 
             <Form reply>
                 <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+
+                <span>
+                        <Input label='Email' placeholder={`Let's stay in touch!`} value={text} onChange={(e, data) => setEmail(data.value as string) }/>
+                </span>
+                <span>
+                    <Popup
+                        trigger={<span style={{ marginLeft: '70px' }}><Icon circular size='small' name='info' /></span>}
+                        content={<p>In case you have specific questions or you are interested in a conversation. If you submit your E-mail we will personally contact you after the session. We will not give away your E-mail address. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
+                        basic
+                        hoverable
+                    />
+                </span>
+
+                <br/>
+                <br/>
+
                 <Button type='submit' primary onClick={e => handleSubmit()}>
-                    <Icon  name='edit' />
                     Submit
                 </Button>
             </Form>
