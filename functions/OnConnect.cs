@@ -84,7 +84,7 @@ namespace SessionFeed
                     UserId = eventMessage.UserId,
                     Target = "message",
                     Arguments = new[] { new { channel = "@@socket/INIT", payload = threadList.OrderByDescending(o => o.likedBy != null ? o.likedBy.Count : float.MinValue).ToList() } }
-                });
+                }).ConfigureAwait(false);
         }
     }
 }
