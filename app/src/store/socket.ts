@@ -36,7 +36,7 @@ if (useMockSocket) {
 enum SocketActionTypes {
     INIT = '@@socket/INIT',
     UPDATE_THREAD = '@@socket/UPDATE_THREAD',
-    ADD_VOTE = '@@socket/ADD_VOTE'
+    UPDATE_VOTE = '@@socket/UPDATE_VOTE'
 }
 
 function initWebsocket() {
@@ -73,7 +73,7 @@ function initWebsocket() {
                         return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
-                    case SocketActionTypes.ADD_VOTE:
+                    case SocketActionTypes.UPDATE_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(e)}`)
@@ -102,7 +102,7 @@ function initSignalR() {
                         return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
-                    case SocketActionTypes.ADD_VOTE:
+                    case SocketActionTypes.UPDATE_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(message)}`)
