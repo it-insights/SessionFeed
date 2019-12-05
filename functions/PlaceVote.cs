@@ -7,27 +7,41 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace SessionFeed
 {
     public static class PlaceVote
     {
+        public class VoteCategory
+        {
+            public string name { get; set; }
+            public int rating { get; set; }
+        }
+
+        public class Vote
+        {
+            public List<VoteCategory> categories { get; set; }
+            public string author { get; set; }
+            public string email { get; set; }
+            public string comment { get; set; }
+        }
+        
         [FunctionName("PlaceVote")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        public static async Task Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
+            [CosmosDB(
+            databaseName: "sessionfeed",
+            collectionName: "signalrtchvotes",
+            CreateIfNotExists = true,
+            ConnectionStringSetting = "CosmosDBConnection")]
+            IAsyncCollector<Vote> votesOut,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            return name != null
-                ? (ActionResult)new OkObjectResult($"Hello, {name}")
-                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+            Vote vote = await req.Content.ReadAsAsync<Vote>();
+            log.LogInformation("PlaceVote triggered");
+            await votesOut.AddAsync(vote);
         }
     }
 }
