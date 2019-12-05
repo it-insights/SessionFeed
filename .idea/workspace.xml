@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6bae7fdc-04db-402d-b1c4-f57e5b561edc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/src/store/votes/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/store/votes/types.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1UZcWY8zjb7nkCr7It4CdEqEGbq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6bae7fdc-04db-402d-b1c4-f57e5b561edc" name="Default Changelist" comment="" />
+      <created>1575567590092</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1575567590092</updated>
+      <workItem from="1575567593074" duration="799000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="20" y="42" width="1255" height="1018" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575568426217">
+      <screen x="0" y="23" width="2560" height="1057" />
+    </state>
+    <state x="20" y="42" width="1255" height="1018" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.142.1440.877/0.23.2560.1057/-1920.23.1920.1057@0.23.2560.1057" timestamp="1575568426217" />
+  </component>
+</project>
