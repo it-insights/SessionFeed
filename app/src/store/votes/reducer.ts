@@ -1,5 +1,6 @@
 import { Reducer } from 'redux'
 import {VotesState, VoteActionTypes, VoteCategory} from './types'
+import {Thread} from "../threads/types";
 
 // Type-safe initialState!
 export const initialState: VotesState = {
@@ -45,9 +46,20 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
             }
         }
         case VoteActionTypes.VOTE_SUCCESS: {
+            let categories = [ ...state.categories ] as VoteCategory[]
+
+            for (const categoryUpdate of action.payload as VoteCategory[]) {
+                const index = categories.findIndex(el => el.name === categoryUpdate.name);
+
+                // Replace to add missing metadata
+                if (index !== -1) {
+                    categories = [...categories.slice(0, index), { ...categoryUpdate, rating: categories[index].rating }, ...categories.slice(index + 1)]
+                }
+            }
+
             return {
                 ...state,
-                categories: action.payload.categories
+                categories
             }
         }
         default:
