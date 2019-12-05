@@ -8,7 +8,7 @@ const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://session
 
 function* handleSubmit(action: ReturnType<typeof submit>) {
     try {
-        const res = yield call(callApi, 'post', endpoint, 'vote', action.payload);
+        const res = yield call(callApi, 'post', endpoint, 'placeVote', action.payload);
 
         if (res.error) {
             yield put(fetchError(res.error))
