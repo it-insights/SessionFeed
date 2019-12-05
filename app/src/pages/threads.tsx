@@ -110,7 +110,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
             </Feed>
             <Form>
                 <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                <Button type='submit'  onClick={e => handleAdd(text)}>Submit</Button>
+                <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
             </Form>
         </div>
     )

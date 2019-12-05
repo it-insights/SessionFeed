@@ -27,6 +27,7 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
 const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, addComment, threads, userName }) => {
     const [ text, setText ] = useState('');
+    const [ error, setError ] = useState('');
 
     const thread = threads.find(t => t.id === location.pathname.split('/').pop()) as Thread;
 
@@ -112,7 +113,7 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
 
             <Form reply>
                 <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                <Button type='submit' primary onClick={e => handleAddComment(text)}>
+                <Button type='submit' primary disabled={text.length === 0} onClick={e => handleAddComment(text)}>
                     <Icon  name='edit' />
                     Submit
                 </Button>

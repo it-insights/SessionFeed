@@ -27,7 +27,7 @@ type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
 const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history }) => {
     const [ name, setName ] = useState('');
-    const [ errorMessage, setError ] = useState('');
+    const [ error, setError ] = useState('');
 
     if (isAuthenticated)
         history.push('/');
@@ -57,8 +57,8 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
                             <Form>
                                 <Form.Field>
                                     <Header as='h3' textAlign='center'>Join Feed</Header>
-                                    <Input error={!!errorMessage} placeholder='What is your name?' value={name} onChange={e => handleInput(e.target.value) }/>
-                                    {errorMessage ? <Message size='small' negative>{errorMessage}</Message> : ''}
+                                    <Input error={!!error} placeholder='What is your name?' value={name} onChange={e => handleInput(e.target.value) }/>
+                                    {error ? <Message size='small' negative>{error}</Message> : ''}
                                 </Form.Field>
                                 <Button id='login' type='submit'  onClick={e => handleLogin(name)}>Submit</Button>
                             </Form>

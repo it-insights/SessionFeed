@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab2919fb-139d-4d32-a328-78a7b7061507" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PageHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PageHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/votes/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/votes/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/thread.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/thread.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/threads.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/threads.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +23,9 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -74,7 +75,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1575568440776</updated>
-      <workItem from="1575568441974" duration="3776000" />
+      <workItem from="1575568441974" duration="4591000" />
     </task>
     <servers />
   </component>
