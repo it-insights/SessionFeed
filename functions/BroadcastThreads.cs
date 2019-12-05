@@ -42,27 +42,27 @@ namespace SessionFeed
         [FunctionName("BroadcastThreads")]
         public static async Task Run([CosmosDBTrigger(
             databaseName: "sessionfeed",
-            collectionName: "signalrtch",
+            collectionName: "signalrtchthreads",
             CreateLeaseCollectionIfNotExists = true,
             ConnectionStringSetting = "CosmosDBConnection",
             LeaseCollectionName = "leases")]IReadOnlyList<Document> documents,
             [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
+                collectionName: "signalrtchthreads",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
             try
             {
                 Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
-                log.LogInformation("Getting db entries");
+                log.LogInformation("Getting votes");
 
                 List<Thread> threadList = new List<Thread>();
 
                 foreach (var document in documents)
                 {
-                    IDocumentQuery<Thread> query = client.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
+                    IDocumentQuery<Thread> query = threadClient.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
 
                     while (query.HasMoreResults)
                     {
@@ -78,7 +78,7 @@ namespace SessionFeed
                     {
                         Target = "message",
                         Arguments = new[] { new { channel = "@@socket/UPDATE_THREAD", payload = threadList } }
-                    });
+                    }).ConfigureAwait(false);
             }
             catch (Exception e)
             {

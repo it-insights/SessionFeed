@@ -37,25 +37,24 @@ namespace SessionFeed
             LeaseCollectionName = "leases")]IReadOnlyList<Document> documents,
             [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
+                collectionName: "signalrtchthreads",
+                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
             try
             {
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchvotes");
-                log.LogInformation("Getting db entries");
+                Uri votesUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchvotes");
 
                 List<VoteCategory> voteList = new List<VoteCategory>();
-
                 List<VoteCategory> voteAverages = new List<VoteCategory>();
 
-                IDocumentQuery<VoteDTO> query = client.CreateDocumentQuery<VoteDTO>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
+                log.LogInformation("Getting threads");
+                IDocumentQuery<VoteDTO> voteQuery = threadClient.CreateDocumentQuery<VoteDTO>(votesUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
-                while (query.HasMoreResults)
+                while (voteQuery.HasMoreResults)
                 {
-                    foreach (VoteDTO result in await query.ExecuteNextAsync().ConfigureAwait(false))
+                    foreach (VoteDTO result in await voteQuery.ExecuteNextAsync().ConfigureAwait(false))
                     {
                         if (result != null && result.categories != null)
                         {
@@ -66,11 +65,9 @@ namespace SessionFeed
 
                 foreach (VoteCategory voteCategory in voteList.GroupBy(x => x.name).Select(x => x.FirstOrDefault()))
                 {
-
                     voteAverages.Add(new VoteCategory { name = voteCategory.name, count = voteList.Where(p => p.name.Equals(voteCategory.name)).Count(), average = Convert.ToSingle(voteList.Where(p => p.name.Equals(voteCategory.name)).Average(p => p.rating))});
                     log.LogInformation("Category Name: {0}; Vote count:{1}; Vote average:{2}\t", voteAverages.Last().name, voteAverages.Last().count, voteAverages.Last().average);
                 }
-                // log.LogInformation(voteList.Average(item => item.rating).ToString());
 
                 await signalRMessages.AddAsync(
                     new SignalRMessage
