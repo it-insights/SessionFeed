@@ -29,6 +29,8 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
     const [ text, setText ] = useState('');
     const [ email, setEmail ] = useState('');
 
+    const canSubmit = () => !categories.every((c: VoteCategory) => c.rating !== 0);
+
     function handleVote(rating: number, name: string) {
         vote({
             name,
@@ -50,7 +52,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
             <Item.Group>
                 <Item>
                     <Item.Content>
-                        <Item.Header>{category.name}</Item.Header>
+                        <Item.Header>{category.name} *</Item.Header>
                         <Item.Description>
                             <Rating maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
                         </Item.Description>
@@ -94,7 +96,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                 <br/>
                 <br/>
 
-                <Button type='submit' primary onClick={e => handleSubmit()}>
+                <Button disabled={canSubmit()} type='submit' primary onClick={e => handleSubmit()}>
                     Submit
                 </Button>
             </Form>
