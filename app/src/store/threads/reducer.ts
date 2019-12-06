@@ -2,6 +2,7 @@ import { Reducer } from 'redux'
 import { ThreadsState, Thread, ThreadComment, ThreadsActionTypes } from './types'
 import {act} from "react-dom/test-utils";
 import thread from "../../pages/thread";
+import {like} from "./actions";
 
 // Type-safe initialState!
 export const initialState: ThreadsState = {
@@ -61,6 +62,9 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
             let threads = [ ...state.threads ] as Thread[]
 
             for (const thread of action.payload as Thread[]) {
+                thread.likedBy = thread.likedBy || [];
+                thread.comments = thread.comments || [];
+
                 // Check if message already present / current client already has object in state
                 const index = threads.findIndex(el => el.clientId === thread.clientId);
 
@@ -76,7 +80,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
             return { ...state, threads: threads.sort((a, b) => b.likedBy.length - a.likedBy.length) }
         }
         case ThreadsActionTypes.INIT_SUCCESS: {
-            return { ...state, loading: false, threads: action.payload }
+            return { ...state, loading: false, threads: action.payload.map((t :Thread) => ({...t, likedBy: t.likedBy || [], comments: t.comments || [] })) }
         }
         case ThreadsActionTypes.USER_MESSAGE: {
             return { ...state, userMessage: action.payload }

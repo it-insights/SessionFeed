@@ -38,9 +38,6 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
             </div>
         );
 
-    thread.likedBy = thread.likedBy || [];
-    thread.comments = thread.comments || [];
-
     function handleAddComment(text: string) {
         addComment(thread.id, thread.clientId, {
             timestamp: new Date(),

@@ -66,9 +66,6 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
     }
 
     const Thread = (thread: Thread, index: number) => {
-        thread.likedBy = thread.likedBy || [];
-        thread.comments = thread.comments || [];
-
         return (
             <Feed.Event key={index}>
                 <Feed.Label onClick={() => handleGoToThread(thread)}>
