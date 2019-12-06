@@ -2,24 +2,23 @@ html {
   overflow-y: hidden;
 }
 
-@media
-only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min--moz-device-pixel-ratio: 1.5),
-only screen and (min-device-pixel-ratio: 1.5){
-
-  html,
-  body{
-    width:100%;
-    overflow-x:hidden;
-  }
-
-}
+//@media
+//only screen and (-webkit-min-device-pixel-ratio: 1.5),
+//only screen and (-o-min-device-pixel-ratio: 3/2),
+//only screen and (min--moz-device-pixel-ratio: 1.5),
+//only screen and (min-device-pixel-ratio: 1.5){
+//
+//  html,
+//  body{
+//    width:100%;
+//    overflow-x:hidden;
+//  }
+//
+//}
 
 body {
-  width: 95%;
-  margin: 30px auto;
-  padding: 0px 20px;
+  width: 100%;
+  padding: 30px;
 }
 
 #login-grid {
@@ -51,8 +50,8 @@ body {
 
 @media only screen and (min-width: 767px) {
   body {
-    width: 60%;
-    margin: 30px auto;
+    width: 100%;
+    padding: 30px 120px;
   }
 
   #login-grid {
