@@ -51,7 +51,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
                         ...state.threads.slice(0, index),
                         { ...thread, likedBy: [ ...thread.likedBy, action.payload.author ] },
                         ...state.threads.slice(index + 1)
-                    ]
+                    ].sort((a, b) => b.likedBy.length - a.likedBy.length)
                 }
             }
 
@@ -73,7 +73,7 @@ const reducer: Reducer<ThreadsState> = (state = initialState, action) => {
                 }
             }
 
-            return { ...state, threads };
+            return { ...state, threads: threads.sort((a, b) => b.likedBy.length - a.likedBy.length) }
         }
         case ThreadsActionTypes.INIT_SUCCESS: {
             return { ...state, loading: false, threads: action.payload }
