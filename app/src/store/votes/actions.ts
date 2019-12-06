@@ -4,7 +4,7 @@ import {ThreadsActionTypes} from "../threads/types";
 
 export const vote = (vote: VoteCategory) => action(VoteActionTypes.VOTE, vote)
 export const checkVote = (user: string) => action(VoteActionTypes.CHECK_VOTE, user)
-export const checkVoteSuccess = (result: boolean) => action(VoteActionTypes.CHECK_VOTE_SUCCESS, result)
+export const checkVoteSuccess = (result?: VoteDto) => action(VoteActionTypes.CHECK_VOTE_SUCCESS, result)
 export const dispatchComment = (comment: string) => action(VoteActionTypes.COMMENT, comment)
 export const submit = (voteDto: VoteDto) => action(VoteActionTypes.SUBMIT, voteDto)
 

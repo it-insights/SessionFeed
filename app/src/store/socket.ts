@@ -69,7 +69,7 @@ function initWebsocket() {
                 switch (channel) {
                     case SocketActionTypes.INIT:
                         emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
-                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        // emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
                         return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
@@ -98,7 +98,12 @@ function initSignalR() {
                 switch (channel) {
                     case SocketActionTypes.INIT:
                         emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
-                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+
+                        // If vote schema is specified.
+                        if (message.payload.length > 1) {
+                            emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        }
+
                         return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });

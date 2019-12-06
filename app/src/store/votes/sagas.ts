@@ -15,9 +15,9 @@ function* handleCheckVote(action: ReturnType<typeof checkVote>) {
         }
 
         if (res.payload) {
-            yield put(checkVoteSuccess(true))
+            yield put(checkVoteSuccess(res.payload))
         } else {
-            yield put(checkVoteSuccess(false))
+            yield put(checkVoteSuccess())
         }
     } catch (err) {
         if (err instanceof Error && err.stack) {

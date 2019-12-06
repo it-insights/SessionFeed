@@ -101,8 +101,8 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
             <div>
                 {loading ? (
                     <div>
-                        {([1, 2, 3, 4, 5]).map(() => (
-                        <Placeholder>
+                        {([1, 2, 3, 4, 5]).map((i :number) => (
+                        <Placeholder key={i} >
                             <Placeholder.Header image>
                                 <Placeholder.Line fluid length='full'/>
                                 <Placeholder.Line fluid length='full'/>

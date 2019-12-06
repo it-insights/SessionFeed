@@ -73,7 +73,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                     <Item.Content>
                         <Item.Header>{category.name} *</Item.Header>
                         <Item.Description>
-                            <Rating disabled={hasVoted} maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
+                            <Rating disabled={hasVoted} maxRating={5} defaultRating={hasVoted ? category.rating : 0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
                         </Item.Description>
                         <Feed.Extra style={{ width: '500px'}}>
                             {hasVoted ?
@@ -91,8 +91,9 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
 
     return (
         <div>
-            { loading ? (categories.length > 0 ? categories : [1, 2, 3]).map(() => (
-                    <Segment raised>
+            {/* Loading state */}
+            { loading ? (categories.length > 0 ? categories : [1, 2, 3]).map((i :number) => (
+                    <Segment key={i} raised>
                         <Placeholder>
                             <Placeholder.Header>
                                 <Placeholder.Line fluid length='full' />
@@ -106,6 +107,8 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         </Placeholder>
                     </Segment>
             )):(
+                // Not Loading
+                categories.length === 0 ? <Message positive>There are no published votes yet. Please watch the session and check again later.</Message> : (
                 <div>
                     {categories
                         .map((category: VoteCategory, index: number) => (
@@ -142,6 +145,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         ) : ('') }
                     </Form>
                 </div>
+                    )
             )
             }
         </div>

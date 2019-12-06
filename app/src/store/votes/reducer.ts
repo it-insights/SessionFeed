@@ -23,7 +23,27 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
             return { ...state, loading: true }
         }
         case VoteActionTypes.CHECK_VOTE_SUCCESS: {
-            return { ...state, loading: false, hasVoted: action.payload }
+            if (!action.payload) {
+                return { ...state, loading: false, hasVoted: false }
+            }
+
+            let categories = [ ...state.categories ] as VoteCategory[]
+
+            for (const categoryUpdate of action.payload as VoteCategory[]) {
+                const index = categories.findIndex(el => el.name === categoryUpdate.name);
+
+                // Replace to add missing metadata
+                if (index !== -1) {
+                    categories = [...categories.slice(0, index), { ...categories[index], rating: categoryUpdate.rating }, ...categories.slice(index + 1)]
+                }
+            }
+
+            return {
+                ...state,
+                categories,
+                hasVoted: true
+            }
+
         }
         case VoteActionTypes.VOTE: {
             if (!state.categories)
