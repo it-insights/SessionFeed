@@ -115,12 +115,23 @@ namespace SessionFeed
                         }
                     }
                 }
-
-                foreach (VoteCategory voteCategory in voteList.GroupBy(x => x.name).Select(x => x.FirstOrDefault()))
+                if (voteList.Count == 0)
                 {
-                    voteAverages.Add(new VoteCategory { name = voteCategory.name, count = voteList.Where(p => p.name.Equals(voteCategory.name)).Count(), average = Convert.ToSingle(voteList.Where(p => p.name.Equals(voteCategory.name)).Average(p => p.rating)) });
-                    log.LogInformation("Category Name: {0}; Vote count:{1}; Vote average:{2}\t", voteAverages.Last().name, voteAverages.Last().count, voteAverages.Last().average);
+                    List<string> initCategories = new List<string> { "Category 1", "Category 2", "Category 3", "Category 4" };
+                    foreach (string category in initCategories)
+                    {
+                        voteAverages.Add(new VoteCategory { name = category, count = 0, average = 0 });
+                    }
                 }
+                else
+                {
+                    foreach (VoteCategory voteCategory in voteList.GroupBy(x => x.name).Select(x => x.FirstOrDefault()))
+                    {
+                        voteAverages.Add(new VoteCategory { name = voteCategory.name, count = voteList.Where(p => p.name.Equals(voteCategory.name)).Count(), average = Convert.ToSingle(voteList.Where(p => p.name.Equals(voteCategory.name)).Average(p => p.rating)) });
+                        log.LogInformation("Category Name: {0}; Vote count:{1}; Vote average:{2}", voteAverages.Last().name, voteAverages.Last().count, voteAverages.Last().average);
+                    }
+                }
+                
 
                 var eventMessage = ((JObject)eventGridEvent.Data).ToObject<SignalREvent>();
 

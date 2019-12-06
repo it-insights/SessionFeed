@@ -19,35 +19,44 @@ namespace SessionFeed
             public string avatarUrl { get; set; }
         }
 
+        public class Result<T>
+        {
+            public string Error { get; set; }
+            public T Payload { get; set; }
+        }
+
         [FunctionName("CreateUser")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] User user,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] User user,
             [CosmosDB(
                 databaseName: "sessionfeed",
                 collectionName: "users",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
+                ConnectionStringSetting = "CosmosDBConnection",
+                SqlQuery = "select * from users r where r.name = {name}")
+            ] IEnumerable<User> userItems,
+            [CosmosDB(
+            databaseName: "sessionfeed",
+            collectionName: "users",
+            CreateIfNotExists = true,
+            ConnectionStringSetting = "CosmosDBConnection")]
+            IAsyncCollector<User> usersOut,
             ILogger log)
         {
             log.LogInformation("Triggered CreateUser");
-
-            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "users");
-            IDocumentQuery<User> query = client.CreateDocumentQuery<User>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.name.Equals(user.name)).AsDocumentQuery();
-            List<User> userList = new List<User>();
-            while (query.HasMoreResults)
+            try
             {
-                foreach (User result in await query.ExecuteNextAsync())
+                if (userItems.Any<User>())
                 {
-                    userList.Add(result);
+                    JsonResult response = new JsonResult(new Result<User> { Error = "Username already taken", Payload = userItems.FirstOrDefault() });
+                    response.StatusCode = 409;
+                    return response;
                 }
+                await usersOut.AddAsync(user);
+                return new JsonResult(new Result<User>() { Payload = user });
             }
-
-            if (userList.Count > 0)
+            catch (Exception e)
             {
-                return new BadRequestObjectResult("Username already taken");
-            }
-            else
-            {
-                return new OkObjectResult("User created");
+                return new JsonResult(new Result<User>() { Error = e.Message });
             }
         }
     }
