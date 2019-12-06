@@ -31,12 +31,8 @@ namespace SessionFeed
                     .CreateDocumentQuery<T>(uri, new FeedOptions { EnableCrossPartitionQuery = true })
                     .AsDocumentQuery();
             while (query.HasMoreResults)
-            {
                 foreach (T result in await query.ExecuteNextAsync())
-                {
                     list.Add(result);
-                }
-            }
             return list;
         }
 
