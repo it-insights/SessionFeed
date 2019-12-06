@@ -79,7 +79,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                             {hasVoted ?
                                 <div>
                                     <span>Total votes: {category.count || 'N/A'}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span>Average rating: {category.average || 'N/A'}</span>
+                                    <span>Average rating: {category.average.toFixed(2) || 'N/A'}</span>
                                 </div>
                              : 'Please submit your vote to view totals and averages.'}
                         </Feed.Extra>
