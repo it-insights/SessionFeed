@@ -55,7 +55,7 @@ namespace SessionFeed
         {
             try
             {
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchthreads");
                 log.LogInformation("Getting votes");
 
                 List<Thread> threadList = new List<Thread>();

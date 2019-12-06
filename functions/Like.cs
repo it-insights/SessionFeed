@@ -45,13 +45,13 @@ namespace SessionFeed
                 [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] LikeDTO likeDTO,
                 [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
+                collectionName: "signalrtchthreads",
                 CreateIfNotExists = true,
                 ConnectionStringSetting = "CosmosDBConnection")]
                 IAsyncCollector<Thread> threadsOut,
                 [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
+                collectionName: "signalrtchthreads",
                 ConnectionStringSetting = "CosmosDBConnection",
                 Id = "{id}",
                 PartitionKey = "{clientId}")] Thread thread,

@@ -29,7 +29,7 @@ namespace SessionFeed
         }
         
         [FunctionName("PlaceVote")]
-        public static async Task Run(
+        public static async Task<ActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
             [CosmosDB(
             databaseName: "sessionfeed",
@@ -41,7 +41,15 @@ namespace SessionFeed
         {
             Vote vote = await req.Content.ReadAsAsync<Vote>();
             log.LogInformation("PlaceVote triggered");
-            await votesOut.AddAsync(vote);
+            try
+            {
+                await votesOut.AddAsync(vote);
+                return (ActionResult)new OkObjectResult("Vote place succeeded");
+            }
+            catch (Exception e)
+            {
+                return (ActionResult)new BadRequestObjectResult("Vote place failed");
+            }
         }
     }
 }
