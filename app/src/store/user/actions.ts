@@ -12,6 +12,6 @@ export const fetchSuccess = (data: User) => action(UserActionTypes.FETCH_SUCCESS
 export const fetchError = (message: string) => action(UserActionTypes.FETCH_ERROR, message)
 export const login = (name: string, avatarUrl: string) => action(UserActionTypes.LOGIN, { name, avatarUrl })
 export const loginSuccess = (name: string, avatarUrl: string) => action(UserActionTypes.LOGIN_SUCCESS, { name, avatarUrl })
-export const loginExists = (name: string) => action(UserActionTypes.LOGIN_EXISTS, name)
+export const loginExists = () => action(UserActionTypes.LOGIN_EXISTS)
 
 

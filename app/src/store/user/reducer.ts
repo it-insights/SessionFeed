@@ -7,7 +7,7 @@ export const initialState: UserState = {
     name: '',
     avatarUrl: '',
     isAuthenticated: false,
-    errors: undefined,
+    error: undefined,
     loading: false
 }
 
@@ -20,7 +20,10 @@ const reducer: Reducer<UserState> = (state = initialState, action) => {
             return { ...state, loading: true }
         }
         case UserActionTypes.LOGIN_SUCCESS: {
-            return { ...state, loading: false, name: action.payload.name, avatarUrl: action.payload.avatarUrl, isAuthenticated: true }
+            return { ...state, loading: false, error: '',  name: action.payload.name, avatarUrl: action.payload.avatarUrl, isAuthenticated: true }
+        }
+        case UserActionTypes.LOGIN_EXISTS: {
+            return { ...state, loading: false, error: 'Username already exists. Please choose another one.' }
         }
         case UserActionTypes.FETCH_SUCCESS: {
             return { ...state, loading: false, name: action.payload }
