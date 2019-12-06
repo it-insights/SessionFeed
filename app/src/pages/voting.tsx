@@ -18,7 +18,7 @@ import {
     Button,
     Input,
     Popup,
-    Placeholder
+    Placeholder, Message
 } from "semantic-ui-react";
 import TimeAgo from "react-timeago";
 
@@ -131,9 +131,15 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         <br/>
                         <br/>
 
-                        <Button disabled={canSubmit()} type='submit' primary onClick={e => handleSubmit()}>
+                        <Button disabled={canSubmit() || hasVoted} type='submit' primary onClick={e => handleSubmit()}>
                             Submit
                         </Button>
+
+                        { hasVoted ? (
+                            <Message color='green' positive>
+                                Thank you for participating!
+                            </Message>
+                        ) : ('') }
                     </Form>
                 </div>
             )

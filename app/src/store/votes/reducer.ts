@@ -73,7 +73,8 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
 
             return {
                 ...state,
-                categories
+                categories,
+                hasVoted: true
             }
         }
         default:
