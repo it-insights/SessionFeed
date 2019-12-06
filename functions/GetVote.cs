@@ -51,7 +51,6 @@ namespace SessionFeed
             try
             {
                 return new JsonResult(new Result<Vote>() { Payload = voteItems.FirstOrDefault() });
-
             }
             catch (Exception e)
             {
