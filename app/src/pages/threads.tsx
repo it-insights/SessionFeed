@@ -94,7 +94,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                         </Feed.User>
                     </span>
                     <Feed.Extra text onClick={() => handleGoToThread(thread)}>
-                        {thread.text} {thread.text} {thread.text}
+                        {thread.text}
                     </Feed.Extra>
                     <Feed.Meta style={{width: '500px'}}>
                         <Feed.Date><TimeAgo date={thread.timestamp}/></Feed.Date>
