@@ -23,7 +23,7 @@ import {
     Loader,
     Segment,
     Placeholder,
-    Container
+    Container, Grid
 } from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
@@ -90,7 +90,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                         </Feed.User>
                     </span>
                     <Feed.Extra text onClick={() => handleGoToThread(thread)}>
-                        {thread.text}
+                        {thread.text} {thread.text} {thread.text}
                     </Feed.Extra>
                     <Feed.Meta style={{width: '500px'}}>
                         <Feed.Date><TimeAgo date={thread.timestamp}/></Feed.Date>
@@ -130,19 +130,23 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                         ))}
                     </div>
                 ) : (
-                    <Container>
-                        <Feed size='large'>
-                            {threads
-                                .map((thread, index) => (
-                                    Thread(thread, index)
-                                ))
-                            }
-                        </Feed>
-                        <Form>
-                            <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                            <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
-                        </Form>
-                    </Container>
+                    <Grid centered>
+                        <Grid.Row>
+                            <Feed id='feed' size='large'>
+                                {threads
+                                    .map((thread, index) => (
+                                        Thread(thread, index)
+                                    ))
+                                }
+                            </Feed>
+                        </Grid.Row>
+                        <Grid.Row>
+                            <Form>
+                                <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                                <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
+                            </Form>
+                        </Grid.Row>
+                    </Grid>
                     )
                 }
             </div>

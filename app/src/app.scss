@@ -24,6 +24,21 @@ textarea {
   margin-bottom: 15px !important;
 }
 
+#feed {
+  width: 100% !important;
+
+  .content {
+    width: 50%;
+  }
+
+  .text.extra {
+    text-overflow: ellipsis;
+    max-width: unset !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
 #header {
   margin-bottom: 50px;
 }
