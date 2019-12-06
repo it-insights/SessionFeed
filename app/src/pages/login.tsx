@@ -50,7 +50,7 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
 
     return (
         <div>
-            <Grid centered columns={3}>
+            <Grid id='login-grid'>
                 <Grid.Column>
                     <Grid.Row>
                         <Segment>

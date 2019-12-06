@@ -67,7 +67,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
     }
 
     const Vote = (category: VoteCategory, index: number) => (
-        <Segment key={index}>
+        <Segment key={`vote-${index}`}>
             <Item.Group>
                 <Item>
                     <Item.Content>
@@ -99,7 +99,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
 
             {/* Loading state */}
             { loading ? (categories.length > 0 ? categories : [1, 2, 3]).map((i :number) => (
-                    <Segment key={i} raised>
+                    <Segment key={`$load-${i}`} raised>
                         <Placeholder>
                             <Placeholder.Header>
                                 <Placeholder.Line fluid length='full' />

@@ -74,7 +74,7 @@ function initWebsocket() {
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.UPDATE_VOTE:
-                        return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
+                        return emitter({ type: VoteActionTypes.UPDATE, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(e)}`)
                 }
@@ -108,7 +108,7 @@ function initSignalR() {
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
                     case SocketActionTypes.UPDATE_VOTE:
-                        return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
+                        return emitter({ type: VoteActionTypes.UPDATE, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(message)}`)
                 }

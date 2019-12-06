@@ -27,9 +27,9 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
                 return { ...state, loading: false, hasVoted: false }
             }
 
-            let categories = [ ...state.categories ] as VoteCategory[]
+            let categories = [ ...state.categories ] as VoteCategory[];
 
-            for (const categoryUpdate of action.payload as VoteCategory[]) {
+            for (const categoryUpdate of action.payload.categories as VoteCategory[]) {
                 const index = categories.findIndex(el => el.name === categoryUpdate.name);
 
                 // Replace to add missing metadata
@@ -41,7 +41,8 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
             return {
                 ...state,
                 categories,
-                hasVoted: true
+                hasVoted: true,
+                loading: false
             }
 
         }
@@ -76,7 +77,7 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
                 comment: action.payload || state.comment
             }
         }
-        case VoteActionTypes.VOTE_SUCCESS: {
+        case VoteActionTypes.UPDATE: {
             if (!state.categories)
                 return state;
 
@@ -87,14 +88,14 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
 
                 // Replace to add missing metadata
                 if (index !== -1) {
+                    // Dont loose current users rating...
                     categories = [...categories.slice(0, index), { ...categoryUpdate, rating: categories[index].rating }, ...categories.slice(index + 1)]
                 }
             }
 
             return {
                 ...state,
-                categories,
-                hasVoted: true
+                categories
             }
         }
         default:

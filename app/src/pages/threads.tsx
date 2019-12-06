@@ -12,7 +12,19 @@ import { ApplicationState } from '../store'
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 
 import { add, like } from "../store/threads/actions";
-import {Button, Feed, Form, Header, Icon, TextArea, Image, Loader, Segment, Placeholder} from "semantic-ui-react";
+import {
+    Button,
+    Feed,
+    Form,
+    Header,
+    Icon,
+    TextArea,
+    Image,
+    Loader,
+    Segment,
+    Placeholder,
+    Container
+} from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -118,7 +130,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                         ))}
                     </div>
                 ) : (
-                    <div>
+                    <Container>
                         <Feed size='large'>
                             {threads
                                 .map((thread, index) => (
@@ -130,7 +142,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                             <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
                             <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
                         </Form>
-                    </div>
+                    </Container>
                     )
                 }
             </div>
