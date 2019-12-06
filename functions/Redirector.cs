@@ -10,17 +10,15 @@ using Newtonsoft.Json;
 
 namespace SessionFeed
 {
-    public static class Redirect
+    public static class Redirector
     {
-        [FunctionName("Redirect")]
+        [FunctionName("Redirector")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("Triggered Redirect");
-            string path = req.Headers["x-original-url"];
-
-            return (ActionResult)new RedirectResult($"https://www.sessionfeed.cloud{path}");
+            return (ActionResult)new RedirectResult(@"https://www.sessionfeed.cloud");
         }
     }
 }

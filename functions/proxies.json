@@ -4,9 +4,9 @@
         "redirect": {
             "matchCondition": {
                 "methods": [ "GET" ],
-                "route": "{*path}"
+                "route": "/"
             },
-            "backendUri": "https://sessionfeed.azurewebsites.net/api/Redirect"
+            "backendUri": "https://localhost/api/Redirector"
         }
     }
 }
