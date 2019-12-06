@@ -12,7 +12,7 @@ import { ApplicationState } from '../store'
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 
 import { add, like } from "../store/threads/actions";
-import {Button, Feed, Form, Header, Icon, TextArea, Image, Loader} from "semantic-ui-react";
+import {Button, Feed, Form, Header, Icon, TextArea, Image, Loader, Segment, Placeholder} from "semantic-ui-react";
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -32,7 +32,7 @@ interface PropsFromDispatch {
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName, history, threads }) => {
+const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName, loading, history, threads }) => {
     const [ text, setText ] = useState('');
 
     function handleAdd(text: string) {
@@ -101,17 +101,79 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
 
     return (
         <div>
-            <Feed size='large'>
-                {threads
-                    .map((thread, index) => (
-                        Thread(thread, index)
-                    ))
+            <div>
+                {loading ? (
+                    <div>
+                        <Placeholder>
+                            <Placeholder.Header image>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                            </Placeholder.Header>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='medium'/>
+                                <Placeholder.Line fluid length='medium'/>
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                        <Placeholder>
+                            <Placeholder.Header image>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                            </Placeholder.Header>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='medium'/>
+                                <Placeholder.Line fluid length='medium'/>
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                        <Placeholder>
+                            <Placeholder.Header image>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                            </Placeholder.Header>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='medium'/>
+                                <Placeholder.Line fluid length='medium'/>
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                        <Placeholder>
+                            <Placeholder.Header image>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                            </Placeholder.Header>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='full'/>
+                                <Placeholder.Line fluid length='medium'/>
+                                <Placeholder.Line fluid length='medium'/>
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                    </div>
+                ) : (
+                    <div>
+                        <Feed size='large'>
+                            {threads
+                                .map((thread, index) => (
+                                    Thread(thread, index)
+                                ))
+                            }
+                        </Feed>
+                        <Form>
+                            <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                            <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
+                        </Form>
+                    </div>
+                    )
                 }
-            </Feed>
-            <Form>
-                <TextArea placeholder='Ask a question...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                <Button type='submit' disabled={text.length === 0}  onClick={e => handleAdd(text)}>Submit</Button>
-            </Form>
+            </div>
         </div>
     )
 }

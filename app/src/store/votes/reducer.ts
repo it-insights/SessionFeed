@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 import {VotesState, VoteActionTypes, VoteCategory} from './types'
 import {Thread} from "../threads/types";
+import {act} from "react-dom/test-utils";
 
 // Type-safe initialState!
 export const initialState: VotesState = {
@@ -10,6 +11,8 @@ export const initialState: VotesState = {
         name: 'Category 2'
     }] as VoteCategory[],
     comment: '',
+    loading: true,
+    hasVoted: undefined,
     errors: undefined,
 };
 
@@ -19,6 +22,12 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
     switch (action.type) {
         case VoteActionTypes.INIT_SUCCESS: {
             return { ...state, categories: action.payload }
+        }
+        case VoteActionTypes.CHECK_VOTE: {
+            return { ...state, loading: true }
+        }
+        case VoteActionTypes.CHECK_VOTE_SUCCESS: {
+            return { ...state, loading: false, hasVoted: action.payload }
         }
         case VoteActionTypes.VOTE: {
             const categoryIndex = state.categories.findIndex(el => el.name === action.payload.name);
