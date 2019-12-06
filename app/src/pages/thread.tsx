@@ -52,6 +52,10 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
     }
 
     function handleLike(thread: Thread) {
+        if (thread.likedBy.indexOf(userName) !== -1) {
+            return;
+        }
+
         like({
             id: thread.id,
             clientId: thread.clientId,
