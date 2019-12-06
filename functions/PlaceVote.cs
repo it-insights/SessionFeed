@@ -9,33 +9,20 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class PlaceVote
     {
-        public class VoteCategory
-        {
-            public string name { get; set; }
-            public int rating { get; set; }
-        }
-
-        public class Vote
-        {
-            public List<VoteCategory> categories { get; set; }
-            public string author { get; set; }
-            public string email { get; set; }
-            public string comment { get; set; }
-        }
-        
         [FunctionName("PlaceVote")]
         public static async Task<ActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestMessage req,
             [CosmosDB(
-            databaseName: "sessionfeed",
-            collectionName: "signalrtchvotes",
+            databaseName: Constants.DatabaseName,
+            collectionName: Constants.VotesCollectionName,
             CreateIfNotExists = true,
-            ConnectionStringSetting = "CosmosDBConnection")]
+            ConnectionStringSetting = Constants.ConnectionStringName)]
             IAsyncCollector<Vote> votesOut,
             ILogger log)
         {

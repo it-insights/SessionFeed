@@ -5,61 +5,25 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class AddComment
     {
-        public class User
-        {
-            public string name { get; set; }
-            public string avatarUrl { get; set; }
-        }
-
-        public class ThreadComment
-        {
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-        }
-
-        public class Thread
-        {
-            public string clientId { get; set; }
-            public string id { get; set; }
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-            public List<ThreadComment> comments { get; set; }
-            public List<string> likedBy { get; set; }
-        }
-
-        public class CommentDTO
-        {
-            public string clientId { get; set; }
-            public string id { get; set; }
-            public ThreadComment comment { get; set; }
-        }
-
-        public class Result<T>
-        {
-            public string Error { get; set; }
-            public T Payload { get; set; }
-        }
-
         [FunctionName("AddComment")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] CommentDTO commentDTO,
             [CosmosDB(
-            databaseName: "sessionfeed",
-            collectionName: "signalrtchthreads",
+            databaseName: Constants.DatabaseName,
+            collectionName: Constants.ThreadsCollectionName,
             CreateIfNotExists = true,
-            ConnectionStringSetting = "CosmosDBConnection")]
+            ConnectionStringSetting = Constants.ConnectionStringName)]
             IAsyncCollector<Thread> threadsOut,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
-                ConnectionStringSetting = "CosmosDBConnection",
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName,
                 Id = "{id}",
                 PartitionKey = "{clientId}")] Thread thread,
             ILogger log)

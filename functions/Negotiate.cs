@@ -17,7 +17,7 @@ namespace SessionFeed
     {
         private const string HubName = "sessionfeedbroadcaster";
 
-        [FunctionName("negotiate")]
+        [FunctionName("Negotiate")]
         public static SignalRConnectionInfo Run(
             [HttpTrigger(AuthorizationLevel.Anonymous)]HttpRequest req,
             [SignalRConnectionInfo(HubName = HubName)]SignalRConnectionInfo connectionInfo)

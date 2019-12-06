@@ -4,55 +4,25 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class Like
     {
-        public class User
-        {
-            public string name { get; set; }
-            public string avatarUrl { get; set; }
-        }
-
-        public class ThreadComment
-        {
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-        }
-
-        public class Thread
-        {
-            public string id { get; set; }
-            public string clientId { get; set; }
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-            public List<ThreadComment> comments { get; set; }
-            public List<string> likedBy { get; set; }
-        }
-
-        public class LikeDTO
-        {
-            public string clientId { get; set; }
-            public string id { get; set; }
-            public string author { get; set; }
-        }
-
         [FunctionName("Like")]
         public static async Task Run(
                 [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] LikeDTO likeDTO,
                 [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
                 CreateIfNotExists = true,
-                ConnectionStringSetting = "CosmosDBConnection")]
+                ConnectionStringSetting = Constants.ConnectionStringName)]
                 IAsyncCollector<Thread> threadsOut,
                 [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
-                ConnectionStringSetting = "CosmosDBConnection",
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName,
                 Id = "{id}",
                 PartitionKey = "{clientId}")] Thread thread,
                 ILogger log)

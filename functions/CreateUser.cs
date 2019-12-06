@@ -8,37 +8,26 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using System.Linq;
 using System.Collections.Generic;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class CreateUser
     {
-        public class User
-        {
-            public string name { get; set; }
-            public string avatarUrl { get; set; }
-        }
-
-        public class Result<T>
-        {
-            public string Error { get; set; }
-            public T Payload { get; set; }
-        }
-
         [FunctionName("CreateUser")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] User user,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "users",
-                ConnectionStringSetting = "CosmosDBConnection",
-                SqlQuery = "select * from users r where r.name = {name}")
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.UsersCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName,
+                SqlQuery = "select * from " + Constants.UsersCollectionName + " r where r.name = {name}")
             ] IEnumerable<User> userItems,
             [CosmosDB(
-            databaseName: "sessionfeed",
-            collectionName: "users",
-            CreateIfNotExists = true,
-            ConnectionStringSetting = "CosmosDBConnection")]
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.UsersCollectionName,
+                CreateIfNotExists = true,
+                ConnectionStringSetting = Constants.ConnectionStringName)]
             IAsyncCollector<User> usersOut,
             ILogger log)
         {

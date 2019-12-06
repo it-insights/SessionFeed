@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using System.Linq;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
@@ -19,70 +20,25 @@ namespace SessionFeed
     {
         private const string HubName = "sessionfeedbroadcaster";
 
-        public class SignalREvent
-        {
-            public DateTime Timestamp { get; set; }
-            public string HubName { get; set; }
-            public string ConnectionId { get; set; }
-            public string UserId { get; set; }
-        }
-
-        public class User
-        {
-            public string name { get; set; }
-            public string avatarUrl { get; set; }
-        }
-
-        public class ThreadComment
-        {
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-        }
-
-        public class Thread
-        {
-            public string clientId { get; set; }
-            public string id { get; set; }
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-            public List<ThreadComment> comments { get; set; }
-            public List<string> likedBy { get; set; }
-        }
-
-        public class VoteCategory
-        {
-            public string name { get; set; }
-            public int rating { get; set; }
-            public int count { get; set; }
-            public float average { get; set; }
-        }
-
-        public class VoteDTO
-        {
-            public List<VoteCategory> categories { get; set; }
-        }
-
         [FunctionName("OnConnect")]
         public static async Task Run(
             [EventGridTrigger]EventGridEvent eventGridEvent,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName)] DocumentClient threadClient,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchvotes",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient voteClient,
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.VotesCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName)] DocumentClient voteClient,
             ILogger log)
         {
             try
             {
                 // Get threads
 
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchthreads");
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.ThreadsCollectionName);
                 List<Thread> threadList = new List<Thread>();
 
                 log.LogInformation("Getting threads");
@@ -98,7 +54,7 @@ namespace SessionFeed
 
                 // Get votes
 
-                Uri votesUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchvotes");
+                Uri votesUri = UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.VotesCollectionName);
                 List<VoteCategory> voteList = new List<VoteCategory>();
                 List<VoteCategory> voteAverages = new List<VoteCategory>();
 

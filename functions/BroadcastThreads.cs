@@ -8,54 +8,31 @@ using Microsoft.Azure.Documents.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Extensions.Logging;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class BroadcastThreads
     {
-        public class User
-        {
-            public string name { get; set; }
-            public string avatarUrl { get; set; }
-        }
-
-        public class ThreadComment
-        {
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-        }
-
-        public class Thread
-        {
-            public string clientId { get; set; }
-            public string id { get; set; }
-            public DateTime timestamp { get; set; }
-            public User author { get; set; }
-            public string text { get; set; }
-            public List<ThreadComment> comments { get; set; }
-            public List<string> likedBy { get; set; }
-        }
-
         private const string HubName = "sessionfeedbroadcaster";
 
         [FunctionName("BroadcastThreads")]
         public static async Task Run([CosmosDBTrigger(
-            databaseName: "sessionfeed",
-            collectionName: "signalrtchthreads",
+            databaseName: Constants.DatabaseName,
+            collectionName: Constants.ThreadsCollectionName,
             CreateLeaseCollectionIfNotExists = true,
-            ConnectionStringSetting = "CosmosDBConnection",
+            ConnectionStringSetting = Constants.ConnectionStringName,
             LeaseCollectionName = "leases")]IReadOnlyList<Document> documents,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName)] DocumentClient threadClient,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
             try
             {
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchthreads");
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.ThreadsCollectionName);
                 log.LogInformation("Getting votes");
 
                 List<Thread> threadList = new List<Thread>();

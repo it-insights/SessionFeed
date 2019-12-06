@@ -9,42 +9,30 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class BroadcastVotes
     {
-        public class VoteCategory
-        {
-            public string name { get; set; }
-            public int rating { get; set; }
-            public int count { get; set; }
-            public float average{ get; set; }
-        }
-
-        public class VoteDTO
-        {
-            public List<VoteCategory> categories { get; set; }
-        }
-
         private const string HubName = "sessionfeedbroadcaster";
 
         [FunctionName("BroadcastVotes")]
         public static async Task Run([CosmosDBTrigger(
-            databaseName: "sessionfeed",
-            collectionName: "signalrtchvotes",
-            ConnectionStringSetting = "CosmosDBConnection",
+            databaseName: Constants.DatabaseName,
+            collectionName: Constants.VotesCollectionName,
+            ConnectionStringSetting = Constants.ConnectionStringName,
             LeaseCollectionName = "leases")]IReadOnlyList<Document> documents,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchthreads",
-                ConnectionStringSetting = "CosmosDBConnection")] DocumentClient threadClient,
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName)] DocumentClient threadClient,
             [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
             try
             {
-                Uri votesUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchvotes");
+                Uri votesUri = UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.VotesCollectionName);
 
                 List<VoteCategory> voteList = new List<VoteCategory>();
                 List<VoteCategory> voteAverages = new List<VoteCategory>();

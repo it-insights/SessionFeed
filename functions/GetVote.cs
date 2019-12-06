@@ -11,40 +11,20 @@ using Microsoft.Azure.Documents.Client;
 using System.Collections.Generic;
 using Microsoft.Azure.Documents.Linq;
 using System.Linq;
+using SessionFeed.Models;
 
 namespace SessionFeed
 {
     public static class GetVote
     {
-        public class VoteCategory
-        {
-            public string name { get; set; }
-            public int rating { get; set; }
-        }
-
-        public class Vote
-        {
-            public List<VoteCategory> categories { get; set; }
-            public string author { get; set; }
-            public string email { get; set; }
-            public string comment { get; set; }
-        }
-
-        public class Result<T>
-        {
-            public string Error { get; set; }
-            public T Payload { get; set; }
-        }
-
-
         [FunctionName("GetVote")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetVote/{user}")] HttpRequest req,
             [CosmosDB(
-                databaseName: "sessionfeed",
-                collectionName: "signalrtchvotes",
-                ConnectionStringSetting = "CosmosDBConnection",
-                SqlQuery = "select * from signalrtchvotes r where r.author = {user}")
+                databaseName: Constants.DatabaseName,
+                collectionName: Constants.VotesCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName,
+                SqlQuery = "select * from " + Constants.VotesCollectionName + " r where r.author = {user}")
             ] IEnumerable<Vote> voteItems,
             ILogger log)
         {
