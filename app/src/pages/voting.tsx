@@ -76,7 +76,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                             <Rating maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
                         </Item.Description>
                         <Feed.Extra style={{ width: '500px'}}>
-                            {category.average ?
+                            {hasVoted ?
                                 <div>
                                     <span>Total votes: {category.count || 'N/A'}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <span>Average rating: {category.average || 'N/A'}</span>
