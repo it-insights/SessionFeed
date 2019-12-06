@@ -15,7 +15,15 @@ type AllProps = RouteComponentProps
 
 // @ts-ignore
 const PageHeader: React.FC<AllProps> = ({ history }) => {
-    const [ activeItem, setActiveItem ] = useState('Threads')
+    let defaultRoute = 'Threads'
+
+    if (history.location.pathname === '/vote')
+        defaultRoute = 'Vote'
+
+    if (history.location.pathname === '/imprint')
+        defaultRoute = 'Imprint'
+
+    const [ activeItem, setActiveItem ] = useState(defaultRoute)
 
     return (
         <div>
