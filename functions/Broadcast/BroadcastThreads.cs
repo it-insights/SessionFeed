@@ -27,7 +27,8 @@ namespace SessionFeed
             [CosmosDB(
                 Constants.DatabaseName,
                 Constants.ThreadsCollectionName,
-                ConnectionStringSetting = Constants.ConnectionStringName)]
+                ConnectionStringSetting = Constants.ConnectionStringName,
+                CreateIfNotExists = true)]
             DocumentClient threadClient,
             [SignalR(HubName = HubName)] IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
