@@ -18,43 +18,44 @@ namespace SessionFeed
 
         [FunctionName("BroadcastThreads")]
         public static async Task Run([CosmosDBTrigger(
-            databaseName: Constants.DatabaseName,
-            collectionName: Constants.ThreadsCollectionName,
-            CreateLeaseCollectionIfNotExists = true,
-            ConnectionStringSetting = Constants.ConnectionStringName,
-            LeaseCollectionName = "leases")]IReadOnlyList<Document> documents,
+                Constants.DatabaseName,
+                Constants.ThreadsCollectionName,
+                CreateLeaseCollectionIfNotExists = true,
+                ConnectionStringSetting = Constants.ConnectionStringName,
+                LeaseCollectionName = "leases")]
+            IReadOnlyList<Document> documents,
             [CosmosDB(
-                databaseName: Constants.DatabaseName,
-                collectionName: Constants.ThreadsCollectionName,
-                ConnectionStringSetting = Constants.ConnectionStringName)] DocumentClient threadClient,
-            [SignalR(HubName = HubName)]IAsyncCollector<SignalRMessage> signalRMessages,
+                Constants.DatabaseName,
+                Constants.ThreadsCollectionName,
+                ConnectionStringSetting = Constants.ConnectionStringName)]
+            DocumentClient threadClient,
+            [SignalR(HubName = HubName)] IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
         {
             try
             {
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.ThreadsCollectionName);
+                var collectionUri =
+                    UriFactory.CreateDocumentCollectionUri(Constants.DatabaseName, Constants.ThreadsCollectionName);
                 log.LogInformation("Getting votes");
 
-                List<Thread> threadList = new List<Thread>();
+                var threadList = new List<Thread>();
 
                 foreach (var document in documents)
                 {
-                    IDocumentQuery<Thread> query = threadClient.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
+                    var query = threadClient
+                        .CreateDocumentQuery<Thread>(collectionUri, new FeedOptions {EnableCrossPartitionQuery = true})
+                        .Where(p => p.id.Equals(document.Id)).AsDocumentQuery();
 
                     while (query.HasMoreResults)
-                    {
                         foreach (Thread result in await query.ExecuteNextAsync())
-                        {
                             threadList.Add(result);
-                        }
-                    }
                 }
 
                 await signalRMessages.AddAsync(
                     new SignalRMessage
                     {
                         Target = "message",
-                        Arguments = new[] { new { channel = "@@socket/UPDATE_THREAD", payload = threadList } }
+                        Arguments = new[] {new {channel = "@@socket/UPDATE_THREAD", payload = threadList}}
                     }).ConfigureAwait(false);
             }
             catch (Exception e)
