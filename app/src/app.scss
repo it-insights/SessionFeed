@@ -8,7 +8,24 @@ body {
   margin: 0px auto;
 }
 
-@media only screen and (min-width: 700px) {
+@media only screen and (max-width: 767px) {
+  #thread-grid {
+    .item {
+      margin: 0px !important;;
+    }
+
+    .item>.image {
+      display: none !important;
+    }
+
+    .content {
+      padding: 0px !important;
+    }
+  }
+}
+
+
+@media only screen and (min-width: 767px) {
   body {
     width: 60%;
     margin: 30px auto;
@@ -22,7 +39,14 @@ body {
 
 textarea {
   margin-bottom: 15px !important;
+}
+
+.reply {
   width: 100% !important;
+}
+
+#thread-header {
+  width: 98% !important;
 }
 
 #feed {

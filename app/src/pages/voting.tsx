@@ -123,7 +123,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         ))
                     }
 
-                    <Form reply>
+                    <Form reply className='reply'>
                         <TextArea disabled={hasVoted} placeholder='Post a comment...' value={hasVoted ? comment : text} onChange={(e, data) => setText(data.value as string) } />
 
                         <span>

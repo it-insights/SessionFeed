@@ -4,7 +4,7 @@ import {RouteComponentProps, Route, Switch, Link} from 'react-router-dom'
 import { ApplicationState } from '../store'
 import {LikeDto, Thread, ThreadComment} from "../store/threads/types";
 import { addComment, like } from "../store/threads/actions";
-import {Feed, Icon, Comment, Form, TextArea, Button, Item, Container, Segment} from "semantic-ui-react";
+import {Feed, Icon, Comment, Form, TextArea, Button, Item, Container, Segment, Grid} from "semantic-ui-react";
 import TimeAgo from "react-timeago";
 import {User} from "../store/user/types";
 
@@ -78,47 +78,51 @@ const ThreadPage: React.FC<AllProps> = ({ match, location,userAvatarUrl, like, a
 
     return (
         <div>
-            <Segment>
-                <Item.Group>
-                    <Item>
-                        <Item.Image size='tiny' src={thread.author.avatarUrl} />
-                        <Item.Content>
-                            <Item.Header>Question</Item.Header>
-                            <Item.Meta>
-                                By {thread.author.name}
-                            </Item.Meta>
-                            <Item.Description>
-                                {thread.text}
-                            </Item.Description>
-                            <Feed.Extra style={{ width: '500px'}}>
-                                <Feed.Date style={{ display: 'inline' }}><TimeAgo date={thread.timestamp} /></Feed.Date>
-                                <Feed.Like onClick={() => handleLike(thread)}>
-                                    <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
-                                </Feed.Like>
-                            </Feed.Extra>
-                        </Item.Content>
-                    </Item>
-                </Item.Group>
-            </Segment>
-
-            <Comment.Group>
-                {thread.comments
-                    // .filter(thread => player.is_current_team_member === true)
-                    .map((comment, index) => (
-                        CommentElement(comment, index)
-                    ))
-                }
-            </Comment.Group>
-
-
-
-            <Form reply>
-                <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
-                <Button type='submit' primary disabled={text.length === 0} onClick={e => handleAddComment(text)}>
-                    <Icon  name='edit' />
-                    Submit
-                </Button>
-            </Form>
+            <Grid id='thread-grid' >
+                <Grid.Row>
+                    <Segment id='thread-header'>
+                        <Item.Group>
+                            <Item>
+                                <Item.Image id='thread-image' size='tiny' src={thread.author.avatarUrl} />
+                                <Item.Content>
+                                    <Item.Header>Question</Item.Header>
+                                    <Item.Meta>
+                                        By {thread.author.name}
+                                    </Item.Meta>
+                                    <Item.Description>
+                                        {thread.text}
+                                    </Item.Description>
+                                    <Feed.Extra style={{ width: '500px'}}>
+                                        <Feed.Date style={{ display: 'inline' }}><TimeAgo date={thread.timestamp} /></Feed.Date>
+                                        <Feed.Like onClick={() => handleLike(thread)}>
+                                            <Icon style={{ color: (thread.likedBy.indexOf(userName) === -1 ? 'inherit' : '#ff2733') }} name='like' />{thread.likedBy.length} Like{ thread.likedBy.length == 1 ? '' : 's'}
+                                        </Feed.Like>
+                                    </Feed.Extra>
+                                </Item.Content>
+                            </Item>
+                        </Item.Group>
+                    </Segment>
+                </Grid.Row>
+                <Grid.Row>
+                    <Comment.Group>
+                        {thread.comments
+                            // .filter(thread => player.is_current_team_member === true)
+                            .map((comment, index) => (
+                                CommentElement(comment, index)
+                            ))
+                        }
+                    </Comment.Group>
+                </Grid.Row>
+                <Grid.Row>
+                    <Form reply className='reply'>
+                        <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                        <Button type='submit' primary disabled={text.length === 0} onClick={e => handleAddComment(text)}>
+                            <Icon  name='edit' />
+                            Submit
+                        </Button>
+                    </Form>
+                </Grid.Row>
+            </Grid>
         </div>
     )
 }
