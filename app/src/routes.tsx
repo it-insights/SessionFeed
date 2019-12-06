@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import VotingPage from "./pages/voting";
 import PageHeader from "./components/PageHeader";
 import Imprint from "./pages/imprint";
+import Footer from "./components/Footer";
 
 const Routes: React.FC = () => (
     <div>
@@ -20,6 +21,7 @@ const Routes: React.FC = () => (
             <Route path="/imprint" component={Imprint} />
             <Route component={() => <div>Not Found</div>} />
         </Switch>
+        <Footer/>
     </div>
 )
 
