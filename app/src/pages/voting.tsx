@@ -89,21 +89,37 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
         </Segment>
     )
 
-    const content = () => (
+    return (
         <div>
-            {categories
-                .map((category: VoteCategory, index: number) => (
-                    Vote(category, index)
-                ))
-            }
+            { loading ? (categories.length > 0 ? categories : [1, 2, 3]).map(() => (
+                    <Segment raised>
+                        <Placeholder>
+                            <Placeholder.Header>
+                                <Placeholder.Line fluid length='full' />
+                            </Placeholder.Header>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line fluid length='full' />
+                                <Placeholder.Line fluid length='full' />
+                                <Placeholder.Line fluid length='full' />
+                                <Placeholder.Line fluid length='full' />
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                    </Segment>
+            )):(
+                <div>
+                    {categories
+                        .map((category: VoteCategory, index: number) => (
+                            Vote(category, index)
+                        ))
+                    }
 
-            <Form reply>
-                <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                    <Form reply>
+                        <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
 
-                <span>
+                        <span>
                                 <Input type='email' label='Email' placeholder={`Let's stay in touch!`} value={email} onChange={(e, data) => setEmail(data.value as string) }/>
                         </span>
-                <span>
+                        <span>
                             <Popup
                                 trigger={<span style={{ marginLeft: '70px' }}><Icon circular size='small' name='info' /></span>}
                                 content={<p>In case you have specific questions or you are interested in a conversation. If you submit your E-mail we will personally contact you after the session. We will not give away your E-mail address. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
@@ -112,37 +128,15 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                             />
                         </span>
 
-                <br/>
-                <br/>
+                        <br/>
+                        <br/>
 
-                <Button disabled={canSubmit()} type='submit' primary onClick={e => handleSubmit()}>
-                    Submit
-                </Button>
-            </Form>
-        </div>
-    )
-
-    return (
-        <div>
-            { loading ? (
-                <div>
-                    { categories.map(() => (
-                        <Segment raised>
-                            <Placeholder>
-                                <Placeholder.Header>
-                                    <Placeholder.Line fluid length='full' />
-                                </Placeholder.Header>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line fluid length='full' />
-                                    <Placeholder.Line fluid length='full' />
-                                    <Placeholder.Line fluid length='full' />
-                                    <Placeholder.Line fluid length='full' />
-                                </Placeholder.Paragraph>
-                            </Placeholder>
-                        </Segment>
-                    ))}
+                        <Button disabled={canSubmit()} type='submit' primary onClick={e => handleSubmit()}>
+                            Submit
+                        </Button>
+                    </Form>
                 </div>
-            ):( content )
+            )
             }
         </div>
     )

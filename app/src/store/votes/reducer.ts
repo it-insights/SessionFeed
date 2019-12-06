@@ -5,11 +5,7 @@ import {act} from "react-dom/test-utils";
 
 // Type-safe initialState!
 export const initialState: VotesState = {
-    categories: [{
-        name: 'Category 1'
-    }, {
-        name: 'Category 2'
-    }] as VoteCategory[],
+    categories: [],
     comment: '',
     loading: true,
     hasVoted: undefined,
@@ -30,6 +26,9 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
             return { ...state, loading: false, hasVoted: action.payload }
         }
         case VoteActionTypes.VOTE: {
+            if (!state.categories)
+                return state;
+
             const categoryIndex = state.categories.findIndex(el => el.name === action.payload.name);
             const category = state.categories[categoryIndex];
 
@@ -58,6 +57,9 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
             }
         }
         case VoteActionTypes.VOTE_SUCCESS: {
+            if (!state.categories)
+                return state;
+
             let categories = [ ...state.categories ] as VoteCategory[]
 
             for (const categoryUpdate of action.payload as VoteCategory[]) {

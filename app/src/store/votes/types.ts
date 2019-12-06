@@ -25,7 +25,7 @@ export interface VoteCategory {
 }
 
 export interface VotesState {
-    readonly categories: VoteCategory[],
+    readonly categories?: VoteCategory[],
     readonly comment: string,
     readonly errors: undefined,
     readonly loading: boolean,
