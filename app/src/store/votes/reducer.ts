@@ -49,7 +49,6 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
                 ...state,
                 categories,
                 comment: action.payload.comment,
-                email: action.payload.email,
                 hasVoted: true,
                 loading: false
             }
