@@ -131,7 +131,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         <span>
                             <Popup
                                 trigger={<span style={{ marginLeft: '70px' }}><Icon circular size='small' name='info' /></span>}
-                                content={<p>In case you have specific questions or you are interested in a conversation. If you submit your E-mail we will personally contact you after the session. We will not give away your E-mail address. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
+                                content={<p>We will not give away your E-mail address to third parties. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
                                 basic
                                 hoverable
                             />
