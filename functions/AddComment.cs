@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SessionFeed
 {
@@ -40,8 +41,14 @@ namespace SessionFeed
             public ThreadComment comment { get; set; }
         }
 
+        public class Result<T>
+        {
+            public string Error { get; set; }
+            public T Payload { get; set; }
+        }
+
         [FunctionName("AddComment")]
-        public static async Task Run(
+        public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] CommentDTO commentDTO,
             [CosmosDB(
             databaseName: "sessionfeed",
@@ -72,7 +79,15 @@ namespace SessionFeed
             thread.comments.Add(commentDTO.comment);
 
             log.LogInformation($"Inserting Thread:{thread.id}");
-            await threadsOut.AddAsync(thread);
+            try
+            {
+                await threadsOut.AddAsync(thread);
+                return new JsonResult(new Result<Thread>() { Payload = thread });
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new Result<Thread>() { Error = e.Message });
+            }
         }
     }
 }

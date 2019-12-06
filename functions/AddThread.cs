@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SessionFeed
 {
@@ -33,8 +34,14 @@ namespace SessionFeed
             public List<string> likedBy { get; set; }
         }
 
+        public class Result<T>
+        {
+            public string Error { get; set; }
+            public T Payload { get; set; }
+        }
+
         [FunctionName("AddThread")]
-        public static async Task Run(
+        public static async Task<ActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] Thread threadItem,
             [CosmosDB(
             databaseName: "sessionfeed",
@@ -46,7 +53,15 @@ namespace SessionFeed
         {
             log.LogInformation("AddThread triggered");
 
-            await threadsOut.AddAsync(threadItem);
+            try
+            {
+                await threadsOut.AddAsync(threadItem);
+                return new JsonResult(new Result<Thread>() { Payload = threadItem });
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new Result<Thread>() { Error = e.Message });
+            }
         }
     }
 }

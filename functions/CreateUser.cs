@@ -24,13 +24,13 @@ namespace SessionFeed
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] User user,
             [CosmosDB(
                 databaseName: "sessionfeed",
-                collectionName: "signalrtch",
+                collectionName: "users",
                 ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client,
             ILogger log)
         {
             log.LogInformation("Triggered CreateUser");
 
-            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
+            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "users");
             IDocumentQuery<User> query = client.CreateDocumentQuery<User>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).Where(p => p.name.Equals(user.name)).AsDocumentQuery();
             List<User> userList = new List<User>();
             while (query.HasMoreResults)
@@ -47,7 +47,7 @@ namespace SessionFeed
             }
             else
             {
-                return new OkObjectResult("Ok");
+                return new OkObjectResult("User created");
             }
         }
     }

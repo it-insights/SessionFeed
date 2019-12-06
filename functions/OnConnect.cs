@@ -82,15 +82,15 @@ namespace SessionFeed
             {
                 // Get threads
 
-                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtch");
-                                List<Thread> threadList = new List<Thread>();
+                Uri collectionUri = UriFactory.CreateDocumentCollectionUri("sessionfeed", "signalrtchthreads");
+                List<Thread> threadList = new List<Thread>();
 
                 log.LogInformation("Getting threads");
                 IDocumentQuery<Thread> query = threadClient.CreateDocumentQuery<Thread>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true }).AsDocumentQuery();
 
                 while (query.HasMoreResults)
                 {
-                    foreach (Thread result in await query.ExecuteNextAsync())
+                    foreach (Thread result in await query.ExecuteNextAsync().ConfigureAwait(false))
                     {
                         threadList.Add(result);
                     }
@@ -118,7 +118,6 @@ namespace SessionFeed
 
                 foreach (VoteCategory voteCategory in voteList.GroupBy(x => x.name).Select(x => x.FirstOrDefault()))
                 {
-
                     voteAverages.Add(new VoteCategory { name = voteCategory.name, count = voteList.Where(p => p.name.Equals(voteCategory.name)).Count(), average = Convert.ToSingle(voteList.Where(p => p.name.Equals(voteCategory.name)).Average(p => p.rating)) });
                     log.LogInformation("Category Name: {0}; Vote count:{1}; Vote average:{2}\t", voteAverages.Last().name, voteAverages.Last().count, voteAverages.Last().average);
                 }
