@@ -101,6 +101,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
             <div>
                 {loading ? (
                     <div>
+                        [1, 2, 3, 4, 5]).map(() => (
                         <Placeholder>
                             <Placeholder.Header image>
                                 <Placeholder.Line fluid length='full'/>
@@ -114,45 +115,7 @@ const ThreadsPage: React.FC<AllProps> = ({ match, add, like, avatarUrl, userName
                                 <Placeholder.Line fluid length='medium'/>
                             </Placeholder.Paragraph>
                         </Placeholder>
-                        <Placeholder>
-                            <Placeholder.Header image>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                            </Placeholder.Header>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='medium'/>
-                                <Placeholder.Line fluid length='medium'/>
-                            </Placeholder.Paragraph>
-                        </Placeholder>
-                        <Placeholder>
-                            <Placeholder.Header image>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                            </Placeholder.Header>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='medium'/>
-                                <Placeholder.Line fluid length='medium'/>
-                            </Placeholder.Paragraph>
-                        </Placeholder>
-                        <Placeholder>
-                            <Placeholder.Header image>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                            </Placeholder.Header>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='full'/>
-                                <Placeholder.Line fluid length='medium'/>
-                                <Placeholder.Line fluid length='medium'/>
-                            </Placeholder.Paragraph>
-                        </Placeholder>
+                        ))
                     </div>
                 ) : (
                     <div>
