@@ -9,6 +9,7 @@ export const initialState: VotesState = {
     comment: '',
     loading: true,
     hasVoted: undefined,
+    submitPending: false,
     errors: undefined,
 };
 
@@ -18,6 +19,12 @@ const reducer: Reducer<VotesState> = (state = initialState, action) => {
     switch (action.type) {
         case VoteActionTypes.INIT_SUCCESS: {
             return { ...state, categories: action.payload }
+        }
+        case VoteActionTypes.SUBMIT: {
+            return { ...state, submitPending: true }
+        }
+        case VoteActionTypes.SUBMIT_SUCCESS: {
+            return { ...state, submitPending: false, hasVoted: true }
         }
         case VoteActionTypes.CHECK_VOTE: {
             return { ...state, loading: true }

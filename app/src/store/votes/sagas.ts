@@ -1,6 +1,6 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {VoteActionTypes} from './types'
-import {fetchError, submit, checkVote, checkVoteSuccess } from './actions'
+import {fetchError, submit, checkVote, checkVoteSuccess, submitSuccess} from './actions'
 
 import { callApi } from '../../utils/api'
 
@@ -35,6 +35,8 @@ function* handleSubmit(action: ReturnType<typeof submit>) {
         if (res.error) {
             yield put(fetchError(res.error))
         }
+
+        yield put(submitSuccess());
     } catch (err) {
         if (err instanceof Error && err.stack) {
             yield put(fetchError(err.stack))

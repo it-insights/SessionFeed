@@ -6,6 +6,7 @@ export enum VoteActionTypes {
     INIT_SUCCESS = '@@votes/INIT_SUCCESS',
     COMMENT = '@@votes/COMMENT',
     SUBMIT = '@@votes/SUBMIT',
+    SUBMIT_SUCCESS = '@@votes/SUBMIT_SUCCESS',
     FETCH_SUCCESS = '@@votes/FETCH_SUCCESS',
     FETCH_ERROR = '@@votes/FETCH_ERROR',
 }
@@ -30,4 +31,5 @@ export interface VotesState {
     readonly errors: undefined,
     readonly loading: boolean,
     readonly hasVoted?: boolean,
+    readonly submitPending: boolean,
 }

@@ -27,7 +27,8 @@ interface PropsFromState {
     categories: string,
     comment: string
     hasVoted: boolean,
-    loading: boolean
+    loading: boolean,
+    submitPending: boolean
 }
 
 interface PropsFromDispatch {
@@ -41,7 +42,7 @@ interface PropsFromDispatch {
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch & any
 
 // @ts-ignore
-const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, checkVote, submit, loading, hasVoted, vote, userName, component: Component, ...params }) => {
+const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, checkVote, submit, submitPending, loading, hasVoted, vote, userName, component: Component, ...params }) => {
     const [ text, setText ] = useState('');
     const [ email, setEmail ] = useState('');
 
@@ -140,7 +141,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         <br/>
                         <br/>
 
-                        <Button disabled={canSubmit() || hasVoted} type='submit' primary onClick={e => handleSubmit()}>
+                        <Button loading={submitPending} disabled={canSubmit() || hasVoted} type='submit' primary onClick={e => handleSubmit()}>
                             Submit
                         </Button>
                     </Form>
@@ -157,7 +158,8 @@ const mapStateToProps = ({ user, votes }: ApplicationState) => ({
     userName: user.name,
     comment: votes.comment,
     hasVoted: votes.hasVoted,
-    loading: votes.loading
+    loading: votes.loading,
+    submitPending: votes.submitPending
 })
 
 const mapDispatchToProps = {
