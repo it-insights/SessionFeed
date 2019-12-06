@@ -1,12 +1,18 @@
 import { all, call, fork, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import {User, UserActionTypes} from './types'
-import { fetchError, fetchSuccess, login, loginSuccess } from './actions'
+import {fetchError, fetchSuccess, login, loginExists, loginSuccess} from './actions'
+import {callApi} from "../../utils/api";
 
 const endpoint: string = process.env.REACT_APP_REST_ENDPOINT || 'https://sessionfeed.azurewebsites.net/api';
 
 function* handleLogin(action: ReturnType<typeof login>) {
     try {
-        // Check if user exists...
+        const res = yield call(callApi, 'post', endpoint, 'createUser', action.payload);
+
+        if (res.status === 409) {
+            yield put(loginExists())
+            return;
+        }
 
         localStorage.setItem('user', action.payload.name);
         localStorage.setItem('avatarUrl', action.payload.avatarUrl);

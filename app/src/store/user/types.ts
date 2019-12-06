@@ -29,5 +29,5 @@ export interface UserState {
     readonly isAuthenticated: boolean
     readonly name: string
     readonly avatarUrl: string
-    readonly errors?: string
+    readonly error?: string
 }

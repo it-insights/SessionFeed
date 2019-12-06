@@ -14,7 +14,7 @@ import {Button, Form, Grid, Segment, Divider, Header, Input, Label, Message} fro
 interface PropsFromState {
     loading: boolean
     name: string
-    errors?: string
+    error?: string
     isAuthenticated: boolean
 }
 
@@ -25,21 +25,21 @@ interface PropsFromDispatch {
 // Combine both state + dispatch props - as well as any props we want to pass - in a union type.
 type AllProps = PropsFromState & RouteComponentProps & PropsFromDispatch
 
-const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history }) => {
+const LoginPage: React.FC<AllProps> = ({ match, error, loading, login, isAuthenticated, history }) => {
     const [ name, setName ] = useState('');
-    const [ error, setError ] = useState('');
+    const [ errorMessage, setErrorMessage ] = useState('');
 
     if (isAuthenticated)
         history.push('/');
 
     function handleInput(name: string) {
-        setError('');
+        setErrorMessage('');
         setName(name)
     }
 
     function handleLogin(name: string) {
         if (name === '') {
-            setError('Name cannot be empty.')
+            setErrorMessage('Name cannot be empty.')
             return;
         }
 
@@ -57,10 +57,10 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
                             <Form>
                                 <Form.Field>
                                     <Header as='h3' textAlign='center'>Join Feed</Header>
-                                    <Input error={!!error} placeholder='What is your name?' value={name} onChange={e => handleInput(e.target.value) }/>
-                                    {error ? <Message size='small' negative>{error}</Message> : ''}
+                                    <Input error={!!errorMessage} placeholder='What is your name?' value={name} onChange={e => handleInput(e.target.value) }/>
+                                    {errorMessage || error ? <Message size='small' negative>{errorMessage || error}</Message> : ''}
                                 </Form.Field>
-                                <Button id='login' type='submit'  onClick={e => handleLogin(name)}>Submit</Button>
+                                <Button loading={loading} id='login' type='submit'  onClick={e => handleLogin(name)}>Submit</Button>
                             </Form>
                         </Segment>
                     </Grid.Row>
@@ -75,7 +75,7 @@ const LoginPage: React.FC<AllProps> = ({ match, login, isAuthenticated, history 
 // separate them from each other to prevent prop conflicts.
 const mapStateToProps = ({ router, user }: ApplicationState) => ({
     loading: user.loading,
-    errors: user.errors,
+    error: user.error,
     name: user.name,
     isAuthenticated: user.isAuthenticated
 })
