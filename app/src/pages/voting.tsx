@@ -73,7 +73,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                     <Item.Content>
                         <Item.Header>{category.name} *</Item.Header>
                         <Item.Description>
-                            <Rating maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
+                            <Rating disabled={hasVoted} maxRating={5} defaultRating={0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
                         </Item.Description>
                         <Feed.Extra style={{ width: '500px'}}>
                             {hasVoted ?
@@ -114,10 +114,10 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                     }
 
                     <Form reply>
-                        <TextArea placeholder='Post a comment...' value={text} onChange={(e, data) => setText(data.value as string) } />
+                        <TextArea disabled={hasVoted} placeholder='Post a comment...' value={hasVoted ? comment : text} onChange={(e, data) => setText(data.value as string) } />
 
                         <span>
-                                <Input type='email' label='Email' placeholder={`Let's stay in touch!`} value={email} onChange={(e, data) => setEmail(data.value as string) }/>
+                                <Input disabled={hasVoted} type='email' label='Email' placeholder={`Let's stay in touch!`} value={email} onChange={(e, data) => setEmail(data.value as string) }/>
                         </span>
                         <span>
                             <Popup
