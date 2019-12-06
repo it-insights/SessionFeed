@@ -76,7 +76,7 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         <Item.Description>
                             <Rating disabled={hasVoted} maxRating={5} defaultRating={hasVoted ? category.rating : 0} icon='star' size='huge' onRate={(e, data) => handleVote(data.rating as number, category.name)} />
                         </Item.Description>
-                        <Feed.Extra style={{ width: '500px'}}>
+                        <Feed.Extra>
                             {hasVoted ?
                                 <div>
                                     <span>Total votes: {category.count || 'N/A'}</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -126,19 +126,17 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                     <Form reply className='reply'>
                         <TextArea disabled={hasVoted} placeholder='Post a comment...' value={hasVoted ? comment : text} onChange={(e, data) => setText(data.value as string) } />
 
-                        <span>
-                                <Input disabled={hasVoted} type='email' label='Email' placeholder={`Let's stay in touch!`} value={email} onChange={(e, data) => setEmail(data.value as string) }/>
-                        </span>
-                        <span>
+                        <Input style={{ marginBottom: '5px' }} disabled={hasVoted} type='email' label='Email' placeholder={`Let's stay in touch!`} value={email} onChange={(e, data) => setEmail(data.value as string) }/>
+                        <br/>
+                        <div>
                             <Popup
-                                trigger={<span style={{ marginLeft: '70px' }}><Icon circular size='small' name='info' /></span>}
-                                content={<p>We will not give away your E-mail address to third parties. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
+                                trigger={<a >Why Email?</a>}
+                                content={<p>We will send you further session information and materials. We will not give away your E-mail address to third parties. Please review our <a href='/imprint'>imprint</a> for further information.</p>}
                                 basic
                                 hoverable
                             />
-                        </span>
+                        </div>
 
-                        <br/>
                         <br/>
 
                         <Button loading={submitPending} disabled={canSubmit() || hasVoted} type='submit' primary onClick={e => handleSubmit()}>
