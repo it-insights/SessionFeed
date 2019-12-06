@@ -91,6 +91,12 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
 
     return (
         <div>
+            { hasVoted ? (
+                <Message color='green' positive>
+                    Thank you for participating!
+                </Message>
+            ) : ('') }
+
             {/* Loading state */}
             { loading ? (categories.length > 0 ? categories : [1, 2, 3]).map((i :number) => (
                     <Segment key={i} raised>
@@ -137,12 +143,6 @@ const VotingPage: React.FC<AllProps> = ({ categories, comment, dispatchComment, 
                         <Button disabled={canSubmit() || hasVoted} type='submit' primary onClick={e => handleSubmit()}>
                             Submit
                         </Button>
-
-                        { hasVoted ? (
-                            <Message color='green' positive>
-                                Thank you for participating!
-                            </Message>
-                        ) : ('') }
                     </Form>
                 </div>
                     )
