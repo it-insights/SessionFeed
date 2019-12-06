@@ -36,7 +36,7 @@ if (useMockSocket) {
 enum SocketActionTypes {
     INIT = '@@socket/INIT',
     UPDATE_THREAD = '@@socket/UPDATE_THREAD',
-    ADD_VOTE = '@@socket/ADD_VOTE'
+    UPDATE_VOTE = '@@socket/UPDATE_VOTE'
 }
 
 function initWebsocket() {
@@ -68,10 +68,12 @@ function initWebsocket() {
                 const channel = message.channel;
                 switch (channel) {
                     case SocketActionTypes.INIT:
-                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
+                        emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
+                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
-                    case SocketActionTypes.ADD_VOTE:
+                    case SocketActionTypes.UPDATE_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(e)}`)
@@ -95,10 +97,12 @@ function initSignalR() {
                 const channel = message.channel;
                 switch (channel) {
                     case SocketActionTypes.INIT:
-                        return emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload });
+                        emitter({ type: ThreadsActionTypes.INIT_SUCCESS, payload: message.payload[0] });
+                        emitter({ type: VoteActionTypes.INIT_SUCCESS, payload: message.payload[1] });
+                        return;
                     case SocketActionTypes.UPDATE_THREAD:
                         return emitter({ type: ThreadsActionTypes.UPDATE, payload: message.payload });
-                    case SocketActionTypes.ADD_VOTE:
+                    case SocketActionTypes.UPDATE_VOTE:
                         return emitter({ type: VoteActionTypes.VOTE_SUCCESS, payload: message.payload });
                     default:
                         console.log(`Unknown channel: ${JSON.stringify(message)}`)

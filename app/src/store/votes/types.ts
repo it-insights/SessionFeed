@@ -1,6 +1,7 @@
 export enum VoteActionTypes {
     VOTE = '@@votes/VOTE',
     VOTE_SUCCESS = '@@votes/VOTE_SUCCESS',
+    INIT_SUCCESS = '@@votes/INIT_SUCCESS',
     COMMENT = '@@votes/COMMENT',
     SUBMIT = '@@votes/SUBMIT',
     FETCH_SUCCESS = '@@votes/FETCH_SUCCESS',

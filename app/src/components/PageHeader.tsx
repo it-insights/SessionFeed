@@ -42,6 +42,14 @@ const PageHeader: React.FC<AllProps> = ({ history }) => {
                             history.push('/vote')
                         }}
                     />
+                    <Menu.Item
+                        name='Imprint'
+                        active={activeItem === 'Imprint'}
+                        onClick={() => {
+                            setActiveItem('Imprint');
+                            history.push('/imprint')
+                        }}
+                    />
                 </Menu>
                 ) : ''
             }
