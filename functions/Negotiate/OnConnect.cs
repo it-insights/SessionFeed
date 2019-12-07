@@ -109,7 +109,6 @@ namespace SessionFeed
                                 {
                                     threadList.OrderByDescending(o =>
                                         o.likedBy != null ? o.likedBy.Count : float.MinValue).ToList(),
-                                    voteAverages
                                 }
                             }
                         }
