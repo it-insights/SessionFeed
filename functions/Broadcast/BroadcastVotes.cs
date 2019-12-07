@@ -21,12 +21,14 @@ namespace SessionFeed
                 Constants.DatabaseName,
                 Constants.VotesCollectionName,
                 ConnectionStringSetting = Constants.ConnectionStringName,
-                LeaseCollectionName = "leases")]
+                LeaseCollectionName = "leases",
+                CreateLeaseCollectionIfNotExists = true)]
             IReadOnlyList<Document> documents,
             [CosmosDB(
                 Constants.DatabaseName,
                 Constants.ThreadsCollectionName,
-                ConnectionStringSetting = Constants.ConnectionStringName)]
+                ConnectionStringSetting = Constants.ConnectionStringName,
+                CreateIfNotExists = true)]
             DocumentClient threadClient,
             [SignalR(HubName = HubName)] IAsyncCollector<SignalRMessage> signalRMessages,
             ILogger log)
